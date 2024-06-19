@@ -6,6 +6,7 @@ export const XSpriteArray = [
       { x: 357, y: 17, width: 30, height: 34 },
       { x: 391, y: 17, width: 30, height: 34 },
     ],
+    loop: true,
   },
   {
     name: "jump",
@@ -14,6 +15,7 @@ export const XSpriteArray = [
       { x: 230, y: 57, width: 17, height: 46 },
       { x: 252, y: 57, width: 19, height: 46 },
     ],
+    loop: false,
   },
   {
     name: "fall",
@@ -23,6 +25,7 @@ export const XSpriteArray = [
       { x: 331, y: 57, width: 24, height: 46 },
       // { x: 356, y: 57, width: 30, height: 46 },
     ],
+    loop: false,
   },
   {
     name: "walk",
@@ -39,6 +42,7 @@ export const XSpriteArray = [
       { x: 357, y: 106, width: 34, height: 35 },
       { x: 391, y: 106, width: 29, height: 35 },
     ],
+    loop: true,
   },
   {
     name: "shoot",
@@ -46,6 +50,7 @@ export const XSpriteArray = [
       { x: 132, y: 66, width: 31, height: 34 },
       { x: 168, y: 66, width: 29, height: 34 },
     ],
+    loop: false,
   },
   {
     name: "jumpShoot",
@@ -57,6 +62,7 @@ export const XSpriteArray = [
       { x: 181, y: 143, width: 31, height: 46 },
       { x: 213, y: 143, width: 30, height: 46 },
     ],
+    loop: false,
   },
   {
     name: "dash",
@@ -64,6 +70,7 @@ export const XSpriteArray = [
       { x: 285, y: 158, width: 28, height: 31 },
       { x: 317, y: 163, width: 38, height: 26 },
     ],
+    loop: false,
   },
   {
     name: "dashShoot",
@@ -71,6 +78,7 @@ export const XSpriteArray = [
       { x: 361, y: 158, width: 38, height: 31 },
       { x: 404, y: 163, width: 49, height: 26 },
     ],
+    loop: false,
   },
   {
     name: "walkShoot",
@@ -87,6 +95,7 @@ export const XSpriteArray = [
       { x: 367, y: 192, width: 37, height: 35 },
       { x: 404, y: 192, width: 35, height: 35 },
     ],
+    loop: true,
   },
   {
     name: "spawn",
@@ -99,5 +108,6 @@ export const XSpriteArray = [
       { x: 254, y: 3, width: 31, height: 48 },
       { x: 288, y: 3, width: 31, height: 48 },
     ],
+    loop: false,
   },
 ];

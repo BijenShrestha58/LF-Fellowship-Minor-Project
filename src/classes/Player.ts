@@ -1,7 +1,7 @@
 import { IPlayer } from "../interfaces/IPlayer";
 import Sprite from "./Sprite";
 import { XSpriteArray } from "../utils/spriteArrays/XSpriteArray";
-import { CANVAS_DIMENSIONS, GRAVITY } from "../utils/constants";
+import { GRAVITY } from "../utils/constants";
 
 export default class Player extends Sprite implements IPlayer {
   hp: number;
@@ -12,15 +12,15 @@ export default class Player extends Sprite implements IPlayer {
   isCharging: boolean;
   isShooting: boolean;
   isGoingRight: boolean;
+  isJumping: boolean;
   currentState: string;
-  currentFrameCount: number; // Number of frames in the current animation
   keys: Set<string>;
   constructor(image: HTMLImageElement) {
     super(
       image,
       { x: 323, y: 17 },
       { width: 30, height: 34 },
-      { x: 20, y: 100 },
+      { x: 20, y: 10 },
       { width: 30, height: 34 },
       3,
       0,
@@ -32,18 +32,15 @@ export default class Player extends Sprite implements IPlayer {
     this.hp = 10;
     this.lives = 2;
     this.dashDistance = 0;
-    this.jumpForce = 0;
+    this.jumpForce = 3;
     this.isWallClimb = false;
     this.isCharging = false;
     this.isShooting = false;
     this.isGoingRight = false;
+    this.isJumping = false;
     this.currentState = "idle"; // Initial state
     this.keys = new Set<string>();
 
-    const animation = XSpriteArray.find(
-      (anim) => anim.name === this.currentState
-    );
-    this.currentFrameCount = animation?.pos?.length || 0;
     document.addEventListener("keydown", (e) => this.keyDown(e));
     document.addEventListener("keyup", (e) => this.keyUp(e));
   }
@@ -69,7 +66,9 @@ export default class Player extends Sprite implements IPlayer {
 
   keyUp(e: KeyboardEvent) {
     this.keys.delete(e.key);
-    this.idle();
+    if (e.key === "x" && this.isJumping) {
+      this.dy = 0;
+    }
   }
 
   shoot() {
@@ -85,13 +84,12 @@ export default class Player extends Sprite implements IPlayer {
   }
 
   jump() {
+    this.dy -= this.jumpForce;
     this.setState("jump");
   }
-
   fall() {
     this.setState("fall");
   }
-
   walk() {
     this.setState("walk");
   }
@@ -101,39 +99,44 @@ export default class Player extends Sprite implements IPlayer {
   }
 
   update() {
+    //idle if no inputs being given
+    if (this.keys.size === 0) {
+      this.idle();
+    }
+
+    //gravity calcs
+    this.dy += GRAVITY;
+    if (this.y + this.dy >= 120) {
+      this.y = 120;
+      this.dy = 0;
+    }
+    this.y += this.dy;
+    console.log(this.dy);
+    this.descent = this.dy > 0; //falling if dy>0, therefore descent set to true
+    this.isJumping = this.dy < 0;
+    if (this.descent) {
+      this.fall();
+    }
+
     //movement
     if (this.keys.has("ArrowLeft")) {
-      if (this.dy === 0) {
+      if (!this.descent && !this.isJumping) {
         this.walk();
       }
-
       this.x -= 1;
       this.isGoingRight = false;
     }
     if (this.keys.has("ArrowRight")) {
-      if (this.dy === 0) {
+      if (!this.descent && !this.isJumping) {
         this.walk();
       }
       this.x += 1;
       this.isGoingRight = true;
     }
-
-    //gravity calcs
-    this.dy += GRAVITY;
-    this.y += this.dy;
-
-    if (this.y >= CANVAS_DIMENSIONS.HEIGHT - 300) {
-      this.dy = 0;
-    }
-
-    if (this.dy > 0) {
-      this.descent = true;
-    } else {
-      this.descent = false;
-    }
-    //fall check
-    if (this.descent) {
-      this.fall();
+    if (this.keys.has("x")) {
+      if (!this.descent && !this.isJumping) {
+        this.jump();
+      }
     }
 
     const animation = XSpriteArray.find(
@@ -141,7 +144,13 @@ export default class Player extends Sprite implements IPlayer {
     );
     if (animation && animation.pos) {
       this.spriteCount = animation.pos.length;
-      const framePos = animation.pos[this.spriteSelect % this.spriteCount];
+
+      if (animation.loop) {
+        var framePos = animation.pos[this.spriteSelect % this.spriteCount];
+      } else {
+        var framePos = animation.pos[this.spriteSelect];
+      }
+
       if (framePos) {
         this.spriteX = framePos.x;
         this.spriteY = framePos.y;

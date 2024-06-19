@@ -10,6 +10,7 @@ export interface IPlayer extends ISprite {
   isCharging: boolean;
   isShooting: boolean;
   isGoingRight: boolean;
+  isJumping: boolean;
   shoot: (isShooting: boolean) => void;
   charge: (isCharging: boolean) => void;
   wallClimb: (isWallClimb: boolean) => void;
