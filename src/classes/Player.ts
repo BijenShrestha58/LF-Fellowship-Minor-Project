@@ -13,8 +13,11 @@ export default class Player extends Sprite implements IPlayer {
   isShooting: boolean;
   isJumping: boolean;
   isGoingRight: boolean;
+  dashSpeed: number;
   currentState: string;
+  dashLimit: number;
   keys: Set<string>;
+  isDashing: boolean;
   constructor(image: HTMLImageElement) {
     super(
       image,
@@ -32,13 +35,19 @@ export default class Player extends Sprite implements IPlayer {
     this.image = image;
     this.hp = 10;
     this.lives = 2;
+
+    this.dashSpeed = 3;
     this.dashDistance = 0;
+    this.dashLimit = 100;
+    this.isDashing = false;
+
     this.jumpForce = 3;
     this.isWallClimb = false;
     this.isCharging = false;
     this.isShooting = false;
     this.isJumping = false;
     this.isGoingRight = true;
+
     this.currentState = "idle"; // Initial state
     this.keys = new Set<string>();
 
@@ -70,6 +79,9 @@ export default class Player extends Sprite implements IPlayer {
     if (e.key === "x" && this.isJumping) {
       this.dy = 0;
     }
+    if (e.key === "c") {
+      this.dashDistance = 0;
+    }
   }
 
   shoot() {
@@ -80,6 +92,9 @@ export default class Player extends Sprite implements IPlayer {
     this.setState("charge");
   }
 
+  dash() {
+    this.setState("dash");
+  }
   wallClimb() {
     this.setState("wallClimb");
   }
@@ -99,6 +114,48 @@ export default class Player extends Sprite implements IPlayer {
     this.setState("idle");
   }
 
+  movement() {
+    if (this.keys.has("ArrowLeft")) {
+      if (this.keys.size === 1) {
+        this.walk();
+      }
+      this.x -= 1;
+      this.isGoingRight = false;
+    }
+    if (this.keys.has("ArrowRight")) {
+      if (this.keys.size === 1) {
+        this.walk();
+      }
+      if (this.keys.has("ArrowLeft")) {
+        //Gives priority to right movement if both left and right arrow keys are pressed
+        this.x += 1;
+      }
+      this.x += 1;
+      this.isGoingRight = true;
+    }
+    if (this.keys.has("c")) {
+      if (this.dashDistance <= this.dashLimit) {
+        this.isDashing = true;
+        if (this.isGoingRight) {
+          this.x += this.dashSpeed;
+        } else {
+          this.x -= this.dashSpeed;
+        }
+        if (!this.isJumping && !this.descent) {
+          this.dash();
+        }
+      } else {
+        this.keys.delete("c");
+      }
+      this.dashDistance += 3;
+    }
+    if (this.keys.has("x")) {
+      if (!this.descent && !this.isJumping) {
+        this.jump();
+      }
+    }
+  }
+
   update() {
     //idle if no inputs being given
     if (this.keys.size === 0) {
@@ -112,33 +169,13 @@ export default class Player extends Sprite implements IPlayer {
       this.dy = 0;
     }
     this.y += this.dy;
-    console.log(this.dy);
     this.descent = this.dy > 0; //falling if dy>0, therefore descent set to true
     this.isJumping = this.dy < 0;
     if (this.descent) {
       this.fall();
     }
 
-    //movement
-    if (this.keys.has("ArrowLeft")) {
-      if (!this.descent && !this.isJumping) {
-        this.walk();
-      }
-      this.x -= 1;
-      this.isGoingRight = false;
-    }
-    if (this.keys.has("ArrowRight")) {
-      if (!this.descent && !this.isJumping) {
-        this.walk();
-      }
-      this.x += 1;
-      this.isGoingRight = true;
-    }
-    if (this.keys.has("x")) {
-      if (!this.descent && !this.isJumping) {
-        this.jump();
-      }
-    }
+    this.movement();
 
     //determine direction to face
     this.isFlipX = !this.isGoingRight;
