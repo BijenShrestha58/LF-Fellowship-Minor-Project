@@ -11,8 +11,8 @@ export default class Player extends Sprite implements IPlayer {
   isWallClimb: boolean;
   isCharging: boolean;
   isShooting: boolean;
-  isGoingRight: boolean;
   isJumping: boolean;
+  isGoingRight: boolean;
   currentState: string;
   keys: Set<string>;
   constructor(image: HTMLImageElement) {
@@ -26,6 +26,7 @@ export default class Player extends Sprite implements IPlayer {
       0,
       0,
       0,
+      false,
       false
     );
     this.image = image;
@@ -36,8 +37,8 @@ export default class Player extends Sprite implements IPlayer {
     this.isWallClimb = false;
     this.isCharging = false;
     this.isShooting = false;
-    this.isGoingRight = false;
     this.isJumping = false;
+    this.isGoingRight = true;
     this.currentState = "idle"; // Initial state
     this.keys = new Set<string>();
 
@@ -138,6 +139,9 @@ export default class Player extends Sprite implements IPlayer {
         this.jump();
       }
     }
+
+    //determine direction to face
+    this.isFlipX = !this.isGoingRight;
 
     const animation = XSpriteArray.find(
       (anim) => anim.name === this.currentState

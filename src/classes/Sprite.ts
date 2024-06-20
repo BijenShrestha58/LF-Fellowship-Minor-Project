@@ -19,6 +19,7 @@ export default class Sprite implements ISprite {
   gameFrame: number; //counts number of frames elapsed
   dy: number;
   descent: boolean;
+  isFlipX: boolean;
 
   constructor(
     image: HTMLImageElement,
@@ -30,7 +31,8 @@ export default class Sprite implements ISprite {
     frameX: number,
     gameFrame: number,
     dy: number,
-    descent: boolean
+    descent: boolean,
+    isFlipX: boolean
   ) {
     this.image = image;
     this.spriteX = spritePosition.x;
@@ -46,6 +48,7 @@ export default class Sprite implements ISprite {
     this.gameFrame = gameFrame;
     this.dy = dy;
     this.descent = descent;
+    this.isFlipX = isFlipX;
   }
 
   get spriteSelect(): number {
@@ -53,16 +56,34 @@ export default class Sprite implements ISprite {
   }
 
   draw() {
-    ctx.drawImage(
-      this.image,
-      this.spriteX,
-      this.spriteY,
-      this.spriteWidth,
-      this.spriteHeight,
-      this.x,
-      this.y,
-      this.width,
-      this.height
-    );
+    ctx.save();
+    if (this.isFlipX) {
+      ctx.scale(-1, 1); // Flip horizontally
+      ctx.drawImage(
+        this.image,
+        this.spriteX,
+        this.spriteY,
+        this.spriteWidth,
+        this.spriteHeight,
+        -this.x - this.width, // Adjust x position for flipped sprite
+        this.y,
+        this.width,
+        this.height
+      );
+    } else {
+      ctx.drawImage(
+        this.image,
+        this.spriteX,
+        this.spriteY,
+        this.spriteWidth,
+        this.spriteHeight,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+    }
+
+    ctx.restore();
   }
 }

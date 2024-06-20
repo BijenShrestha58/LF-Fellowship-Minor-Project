@@ -11,4 +11,5 @@ export interface ISprite extends IPosition, IDimensions {
   gameFrame: number;
   dy: number;
   descent: boolean;
+  isFlipX: boolean;
 }
