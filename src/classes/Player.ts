@@ -16,6 +16,8 @@ export default class Player extends Sprite implements IPlayer {
   dashSpeed: number;
   currentState: string;
   dashLimit: number;
+  shootInterval: number;
+  maxShootInterval: number;
   keys: Set<string>;
   isDashing: boolean;
   constructor(image: HTMLImageElement) {
@@ -47,6 +49,8 @@ export default class Player extends Sprite implements IPlayer {
     this.isShooting = false;
     this.isJumping = false;
     this.isGoingRight = true;
+    this.shootInterval = 0;
+    this.maxShootInterval = 10;
 
     this.currentState = "idle"; // Initial state
     this.keys = new Set<string>();
@@ -81,11 +85,21 @@ export default class Player extends Sprite implements IPlayer {
     }
     if (e.key === "c") {
       this.dashDistance = 0;
+      this.isDashing = false;
     }
   }
 
   shoot() {
     this.setState("shoot");
+  }
+  jumpShoot() {
+    this.setState("jumpShoot");
+  }
+  dashShoot() {
+    this.setState("dashShoot");
+  }
+  walkShoot() {
+    this.setState("walkShoot");
   }
 
   charge() {
@@ -93,7 +107,7 @@ export default class Player extends Sprite implements IPlayer {
   }
 
   dash() {
-    this.setState("dash");
+    if (!this.isShooting) this.setState("dash");
   }
   wallClimb() {
     this.setState("wallClimb");
@@ -101,13 +115,13 @@ export default class Player extends Sprite implements IPlayer {
 
   jump() {
     this.dy -= this.jumpForce;
-    this.setState("jump");
+    if (!this.isShooting) this.setState("jump");
   }
   fall() {
-    this.setState("fall");
+    if (!this.isShooting) this.setState("fall");
   }
   walk() {
-    this.setState("walk");
+    if (!this.isShooting) this.setState("walk");
   }
 
   idle() {
@@ -115,11 +129,20 @@ export default class Player extends Sprite implements IPlayer {
   }
 
   movement() {
+    if (this.keys.has("z")) {
+      this.isShooting = true;
+      this.shootInterval = 0;
+    }
+
     if (this.keys.has("ArrowLeft")) {
       if (this.keys.size === 1) {
         this.walk();
       }
-      this.x -= 1;
+      if (!this.isDashing) this.x -= 1; //if dashing, arrow keys don't do anything
+
+      if (this.isDashing && (this.isJumping || this.descent)) {
+        this.x -= this.dashSpeed;
+      }
       this.isGoingRight = false;
     }
     if (this.keys.has("ArrowRight")) {
@@ -130,28 +153,47 @@ export default class Player extends Sprite implements IPlayer {
         //Gives priority to right movement if both left and right arrow keys are pressed
         this.x += 1;
       }
-      this.x += 1;
+      if (!this.isDashing) this.x += 1;
+      if (this.isDashing && (this.isJumping || this.descent)) {
+        this.x += this.dashSpeed;
+      }
       this.isGoingRight = true;
     }
     if (this.keys.has("c")) {
-      if (this.dashDistance <= this.dashLimit) {
-        this.isDashing = true;
-        if (this.isGoingRight) {
-          this.x += this.dashSpeed;
+      if (!this.isJumping && !this.descent) {
+        if (this.dashDistance <= this.dashLimit) {
+          this.isDashing = true;
+          if (this.isGoingRight) {
+            this.x += this.dashSpeed;
+          } else {
+            this.x -= this.dashSpeed;
+          }
+          if (!this.isJumping && !this.descent) {
+            this.dash();
+          }
         } else {
-          this.x -= this.dashSpeed;
+          this.keys.delete("c");
+          this.isDashing = false;
         }
-        if (!this.isJumping && !this.descent) {
-          this.dash();
-        }
-      } else {
-        this.keys.delete("c");
+        this.dashDistance += 3;
       }
-      this.dashDistance += 3;
     }
+
     if (this.keys.has("x")) {
       if (!this.descent && !this.isJumping) {
         this.jump();
+      }
+    }
+
+    if (this.isShooting) {
+      if (this.isJumping || this.descent) {
+        this.jumpShoot();
+      } else if (this.isDashing) {
+        this.dashShoot();
+      } else if (this.keys.has("ArrowRight") || this.keys.has("ArrowLeft")) {
+        this.walkShoot();
+      } else {
+        this.shoot();
       }
     }
   }
@@ -160,6 +202,12 @@ export default class Player extends Sprite implements IPlayer {
     //idle if no inputs being given
     if (this.keys.size === 0) {
       this.idle();
+    }
+
+    //shooting sprite persistence calcs
+    this.shootInterval += 1;
+    if (this.shootInterval >= this.maxShootInterval) {
+      this.isShooting = false;
     }
 
     //gravity calcs
@@ -189,7 +237,11 @@ export default class Player extends Sprite implements IPlayer {
       if (animation.loop) {
         var framePos = animation.pos[this.spriteSelect % this.spriteCount];
       } else {
-        var framePos = animation.pos[this.spriteSelect];
+        if (this.spriteSelect < animation.pos.length) {
+          var framePos = animation.pos[this.spriteSelect];
+        } else {
+          var framePos = animation.pos[animation.pos.length - 1];
+        }
       }
 
       if (framePos) {
@@ -202,5 +254,6 @@ export default class Player extends Sprite implements IPlayer {
       }
       this.gameFrame++;
     }
+    console.log(this.currentState);
   }
 }
