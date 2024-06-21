@@ -21,6 +21,7 @@ let stageMap: StageMap;
 function setUp() {
   player = new Player(XImages);
   stageMap = new StageMap(map);
+  ctx.scale(3, 3);
 }
 
 function gameLoop(timestamp: number) {
@@ -33,8 +34,10 @@ function gameLoop(timestamp: number) {
     // Game logic and drawing code
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    player.update();
+    stageMap.update();
     stageMap.draw();
+
+    player.update();
     player.draw();
   }
   requestAnimationFrame(gameLoop);

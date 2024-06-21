@@ -1,3 +1,4 @@
+import { IDimensions } from "./IDimensions";
 import { ISprite } from "./ISprite";
 
 export interface IPlayer extends ISprite {
@@ -16,6 +17,8 @@ export interface IPlayer extends ISprite {
   isDashing: boolean;
   shootInterval: number;
   maxShootInterval: number;
+  hitBox: IDimensions;
+
   shoot: (isShooting: boolean) => void;
   charge: (isCharging: boolean) => void;
   wallClimb: (isWallClimb: boolean) => void;

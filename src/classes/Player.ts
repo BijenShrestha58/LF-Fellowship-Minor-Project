@@ -1,7 +1,15 @@
 import { IPlayer } from "../interfaces/IPlayer";
 import Sprite from "./Sprite";
 import { XSpriteArray } from "../utils/spriteArrays/XSpriteArray";
-import { GRAVITY } from "../utils/constants";
+import {
+  CANVAS_DIMENSIONS,
+  GRAVITY,
+  MAX_DY,
+  PLAYER_HIT_BOX,
+} from "../utils/constants";
+import { mapColliderArray } from "../utils/spriteArrays/mapColliderArray";
+import { IDimensions } from "../interfaces/IDimensions";
+// import { collision } from "../utils/collision.js";
 
 export default class Player extends Sprite implements IPlayer {
   hp: number;
@@ -18,6 +26,7 @@ export default class Player extends Sprite implements IPlayer {
   dashLimit: number;
   shootInterval: number;
   maxShootInterval: number;
+  hitBox: IDimensions;
   keys: Set<string>;
   isDashing: boolean;
   constructor(image: HTMLImageElement) {
@@ -51,6 +60,10 @@ export default class Player extends Sprite implements IPlayer {
     this.isGoingRight = true;
     this.shootInterval = 0;
     this.maxShootInterval = 10;
+    this.hitBox = {
+      width: PLAYER_HIT_BOX.WIDTH,
+      height: PLAYER_HIT_BOX.HEIGHT,
+    };
 
     this.currentState = "idle"; // Initial state
     this.keys = new Set<string>();
@@ -198,6 +211,13 @@ export default class Player extends Sprite implements IPlayer {
     }
   }
 
+  collisionCheck() {
+    mapColliderArray.forEach((collider, index) => {
+      // if (collision) {
+      // }
+    });
+  }
+
   update() {
     //idle if no inputs being given
     if (this.keys.size === 0) {
@@ -212,10 +232,11 @@ export default class Player extends Sprite implements IPlayer {
 
     //gravity calcs
     this.dy += GRAVITY;
-    if (this.y + this.dy >= 120) {
-      this.y = 120;
+    if (this.y + this.dy >= CANVAS_DIMENSIONS.HEIGHT - 35 * 2) {
+      this.y = CANVAS_DIMENSIONS.HEIGHT - 35 * 2;
       this.dy = 0;
     }
+    if (this.dy >= MAX_DY) this.dy = MAX_DY;
     this.y += this.dy;
     this.descent = this.dy > 0; //falling if dy>0, therefore descent set to true
     this.isJumping = this.dy < 0;
@@ -254,6 +275,6 @@ export default class Player extends Sprite implements IPlayer {
       }
       this.gameFrame++;
     }
-    console.log(this.currentState);
+    console.log(this.dy);
   }
 }
