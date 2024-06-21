@@ -7,7 +7,7 @@ import {
   MAX_DY,
   PLAYER_HIT_BOX,
 } from "../utils/constants";
-import { mapColliderArray } from "../utils/spriteArrays/mapColliderArray";
+// import { mapColliderArray } from "../utils/spriteArrays/mapColliderArray";
 import { IDimensions } from "../interfaces/IDimensions";
 // import { collision } from "../utils/collision.js";
 
@@ -211,12 +211,12 @@ export default class Player extends Sprite implements IPlayer {
     }
   }
 
-  collisionCheck() {
-    mapColliderArray.forEach((collider, index) => {
-      // if (collision) {
-      // }
-    });
-  }
+  // collisionCheck() {
+  //   mapColliderArray.forEach((collider, index) => {
+  //     // if (collision) {
+  //     // }
+  //   });
+  // }
 
   update() {
     //idle if no inputs being given
