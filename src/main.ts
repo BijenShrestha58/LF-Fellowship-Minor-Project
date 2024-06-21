@@ -1,4 +1,5 @@
 import Player from "./classes/Player";
+import StageMap from "./classes/StageMap";
 import "./style.css";
 
 //CANVAS SETUP
@@ -10,20 +11,25 @@ ctx.canvas.height = window.innerHeight;
 
 //VARIABLES DECLARATION
 const XImages = document.getElementById("X") as HTMLImageElement;
+const map = document.getElementById("map") as HTMLImageElement;
 
 let player: Player;
+let stageMap: StageMap;
 
 function setUp() {
   player = new Player(XImages);
+  stageMap = new StageMap(map);
 }
 
-function draw() {
+function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   player.update();
+  // stageMap.update();
+  stageMap.draw();
   player.draw();
-  requestAnimationFrame(draw);
+  requestAnimationFrame(gameLoop);
 }
 
 setUp();
-draw();
+gameLoop();
