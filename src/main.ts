@@ -12,6 +12,8 @@ ctx.canvas.height = window.innerHeight;
 //VARIABLES DECLARATION
 const XImages = document.getElementById("X") as HTMLImageElement;
 const map = document.getElementById("map") as HTMLImageElement;
+let lastTime = 0;
+const fpsInterval = 1000 / 60;
 
 let player: Player;
 let stageMap: StageMap;
@@ -21,15 +23,22 @@ function setUp() {
   stageMap = new StageMap(map);
 }
 
-function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  player.update();
-  // stageMap.update();
-  stageMap.draw();
-  player.draw();
+function gameLoop(timestamp: number) {
+  const elapsed = timestamp - lastTime;
+
+  if (elapsed > fpsInterval) {
+    // Update lastTime to the current timestamp
+    lastTime = timestamp - (elapsed % fpsInterval);
+
+    // Game logic and drawing code
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    player.update();
+    stageMap.draw();
+    player.draw();
+  }
   requestAnimationFrame(gameLoop);
 }
 
 setUp();
-gameLoop();
+requestAnimationFrame(gameLoop);
