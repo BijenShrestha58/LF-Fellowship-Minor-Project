@@ -7,9 +7,8 @@ import {
   MAX_DY,
   PLAYER_HIT_BOX,
 } from "../utils/constants";
-// import { mapColliderArray } from "../utils/spriteArrays/mapColliderArray";
-import { IDimensions } from "../interfaces/IDimensions";
-// import { collision } from "../utils/collision.js";
+import { adjustedColliders } from "../utils/spriteArrays/mapColliderArray";
+import { collision } from "../utils/collision.ts";
 
 export default class Player extends Sprite implements IPlayer {
   hp: number;
@@ -26,7 +25,6 @@ export default class Player extends Sprite implements IPlayer {
   dashLimit: number;
   shootInterval: number;
   maxShootInterval: number;
-  hitBox: IDimensions;
   keys: Set<string>;
   isDashing: boolean;
   constructor(image: HTMLImageElement) {
@@ -41,7 +39,8 @@ export default class Player extends Sprite implements IPlayer {
       0,
       0,
       false,
-      false
+      false,
+      { width: PLAYER_HIT_BOX.WIDTH, height: PLAYER_HIT_BOX.HEIGHT }
     );
     this.image = image;
     this.hp = 10;
@@ -60,10 +59,6 @@ export default class Player extends Sprite implements IPlayer {
     this.isGoingRight = true;
     this.shootInterval = 0;
     this.maxShootInterval = 10;
-    this.hitBox = {
-      width: PLAYER_HIT_BOX.WIDTH,
-      height: PLAYER_HIT_BOX.HEIGHT,
-    };
 
     this.currentState = "idle"; // Initial state
     this.keys = new Set<string>();
@@ -211,12 +206,24 @@ export default class Player extends Sprite implements IPlayer {
     }
   }
 
-  // collisionCheck() {
-  //   mapColliderArray.forEach((collider, index) => {
-  //     // if (collision) {
-  //     // }
-  //   });
-  // }
+  collisionHandler() {
+    adjustedColliders.forEach((collider) => {
+      if (
+        collision(
+          {
+            x: this.x,
+            y: this.y + this.dy,
+            width: this.hitBox.width,
+            height: this.hitBox.height,
+          },
+          collider
+        )
+      ) {
+        this.y = collider.y - this.hitBox.height;
+        this.dy = 0;
+      }
+    });
+  }
 
   update() {
     //idle if no inputs being given
@@ -232,10 +239,11 @@ export default class Player extends Sprite implements IPlayer {
 
     //gravity calcs
     this.dy += GRAVITY;
-    if (this.y + this.dy >= CANVAS_DIMENSIONS.HEIGHT - 35 * 2) {
-      this.y = CANVAS_DIMENSIONS.HEIGHT - 35 * 2;
-      this.dy = 0;
-    }
+    this.collisionHandler();
+    // if (this.y + this.dy >= CANVAS_DIMENSIONS.HEIGHT - 35 * 2) {
+    //   this.y = CANVAS_DIMENSIONS.HEIGHT - 35 * 2;
+    //   this.dy = 0;
+    // }
     if (this.dy >= MAX_DY) this.dy = MAX_DY;
     this.y += this.dy;
     this.descent = this.dy > 0; //falling if dy>0, therefore descent set to true
@@ -275,6 +283,5 @@ export default class Player extends Sprite implements IPlayer {
       }
       this.gameFrame++;
     }
-    console.log(this.dy);
   }
 }

@@ -1,7 +1,7 @@
 import { IDimensions } from "./IDimensions";
-import { IPosition } from "./IPosition";
+import { ISolidObject } from "./ISolidObject";
 
-export interface ISprite extends IPosition, IDimensions {
+export interface ISprite extends ISolidObject {
   spriteX: number;
   spriteY: number;
   spriteWidth: number;
@@ -12,4 +12,5 @@ export interface ISprite extends IPosition, IDimensions {
   dy: number;
   descent: boolean;
   isFlipX: boolean;
+  hitBox: IDimensions;
 }

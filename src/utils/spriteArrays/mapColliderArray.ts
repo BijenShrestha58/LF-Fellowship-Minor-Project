@@ -1,4 +1,7 @@
-export const mapColliderArray = [
+import { ISolidObject } from "../../interfaces/ISolidObject";
+import { MAP_OFFSET } from "../constants";
+
+export const mapColliderArray: ISolidObject[] = [
   {
     x: 9.160318374633789,
     y: 1491.5389404296875,
@@ -234,3 +237,12 @@ export const mapColliderArray = [
     height: 29.07405662536621,
   },
 ];
+
+export const adjustedColliders: ISolidObject[] = mapColliderArray.map(
+  (collider) => ({
+    x: collider.x + MAP_OFFSET.X,
+    y: collider.y + MAP_OFFSET.Y,
+    width: collider.width,
+    height: collider.height,
+  })
+);

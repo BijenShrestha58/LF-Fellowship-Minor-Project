@@ -20,6 +20,7 @@ export default class Sprite implements ISprite {
   dy: number;
   descent: boolean;
   isFlipX: boolean;
+  hitBox: IDimensions;
 
   constructor(
     image: HTMLImageElement,
@@ -32,7 +33,8 @@ export default class Sprite implements ISprite {
     gameFrame: number,
     dy: number,
     descent: boolean,
-    isFlipX: boolean
+    isFlipX: boolean,
+    hitBox: IDimensions
   ) {
     this.image = image;
     this.spriteX = spritePosition.x;
@@ -49,6 +51,10 @@ export default class Sprite implements ISprite {
     this.dy = dy;
     this.descent = descent;
     this.isFlipX = isFlipX;
+    this.hitBox = {
+      width: hitBox.width,
+      height: hitBox.height,
+    };
   }
 
   get spriteSelect(): number {

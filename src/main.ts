@@ -33,11 +33,9 @@ function gameLoop(timestamp: number) {
 
     // Game logic and drawing code
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
     stageMap.update();
-    stageMap.draw();
-
     player.update();
+    stageMap.draw();
     player.draw();
   }
   requestAnimationFrame(gameLoop);

@@ -17,7 +17,6 @@ export interface IPlayer extends ISprite {
   isDashing: boolean;
   shootInterval: number;
   maxShootInterval: number;
-  hitBox: IDimensions;
 
   shoot: (isShooting: boolean) => void;
   charge: (isCharging: boolean) => void;
