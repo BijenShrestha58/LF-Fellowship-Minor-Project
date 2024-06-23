@@ -220,6 +220,7 @@ export default class Player extends Sprite implements IPlayer {
         )
       ) {
         this.y = collider.y - this.hitBox.height;
+        if (this.isDashing) this.y = collider.y - this.height;
         this.dy = 0;
       }
     });
@@ -240,10 +241,7 @@ export default class Player extends Sprite implements IPlayer {
     //gravity calcs
     this.dy += GRAVITY;
     this.collisionHandler();
-    // if (this.y + this.dy >= CANVAS_DIMENSIONS.HEIGHT - 35 * 2) {
-    //   this.y = CANVAS_DIMENSIONS.HEIGHT - 35 * 2;
-    //   this.dy = 0;
-    // }
+
     if (this.dy >= MAX_DY) this.dy = MAX_DY;
     this.y += this.dy;
     this.descent = this.dy > 0; //falling if dy>0, therefore descent set to true
