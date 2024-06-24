@@ -17,10 +17,12 @@ export default class Sprite implements ISprite {
   spriteCount: number; //number of sprites in animation
   frameX: number; //frame count in x-direction
   gameFrame: number; //counts number of frames elapsed
+  dx: number;
   dy: number;
   descent: boolean;
   isFlipX: boolean;
   hitBox: IDimensions;
+  hp: number;
 
   constructor(
     image: HTMLImageElement,
@@ -31,10 +33,12 @@ export default class Sprite implements ISprite {
     spriteCount: number,
     frameX: number,
     gameFrame: number,
+    dx: number,
     dy: number,
     descent: boolean,
     isFlipX: boolean,
-    hitBox: IDimensions
+    hitBox: IDimensions,
+    hp: number
   ) {
     this.image = image;
     this.spriteX = spritePosition.x;
@@ -48,6 +52,7 @@ export default class Sprite implements ISprite {
     this.spriteCount = spriteCount;
     this.frameX = frameX;
     this.gameFrame = gameFrame;
+    this.dx = dx;
     this.dy = dy;
     this.descent = descent;
     this.isFlipX = isFlipX;
@@ -55,6 +60,7 @@ export default class Sprite implements ISprite {
       width: hitBox.width,
       height: hitBox.height,
     };
+    this.hp = hp;
   }
 
   get spriteSelect(): number {

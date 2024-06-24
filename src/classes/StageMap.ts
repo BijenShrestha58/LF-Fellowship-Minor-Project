@@ -9,6 +9,7 @@ export default class StageMap implements IStageMap {
   y: number;
   width: number;
   height: number;
+
   constructor(image: HTMLImageElement) {
     this.image = image;
     this.x = MAP_OFFSET.X;

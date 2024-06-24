@@ -9,9 +9,10 @@ import {
 } from "../utils/constants";
 import { adjustedColliders } from "../utils/spriteArrays/mapColliderArray";
 import { collision } from "../utils/collision.ts";
+import CameraBox from "./CameraBox.ts";
+import Projectile from "./Projectile.ts";
 
 export default class Player extends Sprite implements IPlayer {
-  hp: number;
   lives: number;
   dashDistance: number;
   jumpForce: number;
@@ -27,23 +28,29 @@ export default class Player extends Sprite implements IPlayer {
   maxShootInterval: number;
   keys: Set<string>;
   isDashing: boolean;
+  cameraBox: CameraBox;
+  projectiles: Projectile[];
+  chargeTime: number;
+
   constructor(image: HTMLImageElement) {
     super(
       image,
-      { x: 323, y: 17 },
-      { width: 30, height: 34 },
-      { x: 20, y: 10 },
-      { width: 30, height: 34 },
-      3,
-      0,
-      0,
-      0,
-      false,
-      false,
-      { width: PLAYER_HIT_BOX.WIDTH, height: PLAYER_HIT_BOX.HEIGHT }
+      { x: 323, y: 17 }, //position in spritesheet
+      { width: 30, height: 34 }, //dimensions in spritesheet
+      { x: 20, y: 10 }, //position
+      { width: 30, height: 34 }, //dimensions
+      3, //spriteCount
+      0, //frameX
+      0, //gameFrame
+      0, //dx
+      0, //dy
+      false, //descent
+      false, //isFlipX
+      { width: PLAYER_HIT_BOX.WIDTH, height: PLAYER_HIT_BOX.HEIGHT }, //hitbox
+      10 //hp
     );
     this.image = image;
-    this.hp = 10;
+
     this.lives = 2;
 
     this.dashSpeed = 3;
@@ -59,9 +66,11 @@ export default class Player extends Sprite implements IPlayer {
     this.isGoingRight = true;
     this.shootInterval = 0;
     this.maxShootInterval = 10;
-
+    this.cameraBox = new CameraBox();
     this.currentState = "idle"; // Initial state
     this.keys = new Set<string>();
+    this.projectiles = [];
+    this.chargeTime = 0;
 
     document.addEventListener("keydown", (e) => this.keyDown(e));
     document.addEventListener("keyup", (e) => this.keyUp(e));
@@ -88,6 +97,10 @@ export default class Player extends Sprite implements IPlayer {
 
   keyUp(e: KeyboardEvent) {
     this.keys.delete(e.key);
+    if (e.key === "z") {
+      this.shootProjectile();
+      this.chargeTime = 0; // Reset hold time
+    }
     if (e.key === "x" && this.isJumping) {
       this.dy = 0;
     }
@@ -95,6 +108,28 @@ export default class Player extends Sprite implements IPlayer {
       this.dashDistance = 0;
       this.isDashing = false;
     }
+  }
+
+  shootProjectile() {
+    const projectileSpeed = 5;
+    const dx = this.isGoingRight ? projectileSpeed : -projectileSpeed;
+    const dy = 0;
+    let size = "small";
+
+    if (this.chargeTime > 50) {
+      size = "large";
+    } else if (this.chargeTime > 20) {
+      size = "medium";
+    }
+
+    const projectile = new Projectile(
+      this.isGoingRight ? this.x + this.hitBox.width : this.x,
+      this.y + this.hitBox.height / 2,
+      dx,
+      dy,
+      size
+    );
+    this.projectiles.push(projectile);
   }
 
   shoot() {
@@ -123,6 +158,9 @@ export default class Player extends Sprite implements IPlayer {
 
   jump() {
     this.dy -= this.jumpForce;
+    if (this.isWallClimb) {
+      this.dx -= this.isGoingRight ? 5 : -5;
+    }
     if (!this.isShooting) this.setState("jump");
   }
   fall() {
@@ -140,16 +178,17 @@ export default class Player extends Sprite implements IPlayer {
     if (this.keys.has("z")) {
       this.isShooting = true;
       this.shootInterval = 0;
+      this.chargeTime += 1;
     }
 
     if (this.keys.has("ArrowLeft")) {
       if (this.keys.size === 1) {
         this.walk();
       }
-      if (!this.isDashing) this.x -= 1; //if dashing, arrow keys don't do anything
+      if (!this.isDashing) this.dx -= 1; //if dashing, arrow keys don't do anything
 
       if (this.isDashing && (this.isJumping || this.descent)) {
-        this.x -= this.dashSpeed;
+        this.dx -= this.dashSpeed;
       }
       this.isGoingRight = false;
     }
@@ -159,11 +198,11 @@ export default class Player extends Sprite implements IPlayer {
       }
       if (this.keys.has("ArrowLeft")) {
         //Gives priority to right movement if both left and right arrow keys are pressed
-        this.x += 1;
+        this.dx += 1;
       }
-      if (!this.isDashing) this.x += 1;
+      if (!this.isDashing) this.dx += 1;
       if (this.isDashing && (this.isJumping || this.descent)) {
-        this.x += this.dashSpeed;
+        this.dx += this.dashSpeed;
       }
       this.isGoingRight = true;
     }
@@ -172,9 +211,9 @@ export default class Player extends Sprite implements IPlayer {
         if (this.dashDistance <= this.dashLimit) {
           this.isDashing = true;
           if (this.isGoingRight) {
-            this.x += this.dashSpeed;
+            this.dx += this.dashSpeed;
           } else {
-            this.x -= this.dashSpeed;
+            this.dx -= this.dashSpeed;
           }
           if (!this.isJumping && !this.descent) {
             this.dash();
@@ -183,7 +222,7 @@ export default class Player extends Sprite implements IPlayer {
           this.keys.delete("c");
           this.isDashing = false;
         }
-        this.dashDistance += 3;
+        this.dashDistance += this.dashSpeed;
       }
     }
 
@@ -206,23 +245,22 @@ export default class Player extends Sprite implements IPlayer {
     }
   }
 
-  collisionHandler() {
-    adjustedColliders.forEach((collider) => {
+  updateProjectiles() {
+    this.projectiles.forEach((projectile, index) => {
+      projectile.update();
+      // Remove projectile if it goes off screen
       if (
-        collision(
-          {
-            x: this.x,
-            y: this.y + this.dy,
-            width: this.hitBox.width,
-            height: this.hitBox.height,
-          },
-          collider
-        )
+        projectile.x > this.cameraBox.x + this.cameraBox.width * 2 ||
+        projectile.x < this.cameraBox.x - this.cameraBox.width * 2
       ) {
-        this.y = collider.y - this.hitBox.height;
-        if (this.isDashing) this.y = collider.y - this.height;
-        this.dy = 0;
+        this.projectiles.splice(index, 1);
       }
+    });
+  }
+
+  drawProjectiles() {
+    this.projectiles.forEach((projectile) => {
+      projectile.draw();
     });
   }
 
@@ -240,17 +278,23 @@ export default class Player extends Sprite implements IPlayer {
 
     //gravity calcs
     this.dy += GRAVITY;
-    this.collisionHandler();
-
+    this.dx = 0;
+    this.movement();
+    this.isWallClimb = false;
+    adjustedColliders.forEach((collider) => {
+      collision(this, collider);
+    });
     if (this.dy >= MAX_DY) this.dy = MAX_DY;
+
     this.y += this.dy;
-    this.descent = this.dy > 0; //falling if dy>0, therefore descent set to true
+
+    this.descent = this.dy > 0 && !this.isWallClimb; //falling if dy>0, therefore descent set to true
     this.isJumping = this.dy < 0;
     if (this.descent) {
       this.fall();
     }
 
-    this.movement();
+    this.x += this.dx;
 
     //determine direction to face
     this.isFlipX = !this.isGoingRight;
@@ -281,5 +325,14 @@ export default class Player extends Sprite implements IPlayer {
       }
       this.gameFrame++;
     }
+
+    this.cameraBox.update(this);
+    this.cameraBox.draw();
+    this.updateProjectiles();
+  }
+
+  draw() {
+    super.draw();
+    this.drawProjectiles(); // Draw projectiles
   }
 }

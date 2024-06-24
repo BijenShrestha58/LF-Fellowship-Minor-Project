@@ -1,6 +1,9 @@
+import Enemy from "./classes/Enemy";
+import EnemyA from "./classes/EnemyA";
 import Player from "./classes/Player";
 import StageMap from "./classes/StageMap";
 import "./style.css";
+import { adjustedEnemyASpawn } from "./utils/spriteArrays/enemyAData";
 
 //CANVAS SETUP
 const canvas = document.querySelector<HTMLCanvasElement>("#canvas")!;
@@ -12,15 +15,26 @@ ctx.canvas.height = window.innerHeight;
 //VARIABLES DECLARATION
 const XImages = document.getElementById("X") as HTMLImageElement;
 const map = document.getElementById("map") as HTMLImageElement;
+const weapons = document.getElementById("weapons") as HTMLImageElement;
+const enemyAimg = document.getElementById("enemyA") as HTMLImageElement;
+
 let lastTime = 0;
 const fpsInterval = 1000 / 60;
 
 let player: Player;
 let stageMap: StageMap;
+let enemies: EnemyA[]; //use union here (EnemyA|EnemyB)[]
+enemies = [];
 
 function setUp() {
   player = new Player(XImages);
   stageMap = new StageMap(map);
+  adjustedEnemyASpawn.forEach((enemy) => {
+    let enemyA = new EnemyA(enemyAimg, enemy);
+    enemies.push(enemyA);
+  });
+  console.log(enemies);
+
   ctx.scale(3, 3);
 }
 
@@ -34,8 +48,13 @@ function gameLoop(timestamp: number) {
     // Game logic and drawing code
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     stageMap.update();
-    player.update();
     stageMap.draw();
+    enemies.forEach((enemy) => {
+      enemy.update();
+      enemy.draw();
+    });
+
+    player.update();
     player.draw();
   }
   requestAnimationFrame(gameLoop);
