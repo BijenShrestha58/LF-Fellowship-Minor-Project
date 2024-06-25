@@ -1,6 +1,5 @@
 import EnemyA from "../classes/EnemyA";
 import Projectile from "../classes/Projectile";
-import { IDimensions } from "./IDimensions";
 import { ISolidObject } from "./ISolidObject";
 import { ISprite } from "./ISprite";
 

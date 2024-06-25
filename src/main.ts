@@ -1,5 +1,4 @@
 import DropItem from "./classes/DropItem";
-import Enemy from "./classes/Enemy";
 import EnemyA from "./classes/EnemyA";
 import EnemyB from "./classes/EnemyB";
 import EnemyC from "./classes/EnemyC";
@@ -22,7 +21,7 @@ ctx.canvas.height = window.innerHeight;
 //VARIABLES DECLARATION
 const XImages = document.getElementById("X") as HTMLImageElement;
 const map = document.getElementById("map") as HTMLImageElement;
-const weapons = document.getElementById("weapons") as HTMLImageElement;
+// const weapons = document.getElementById("weapons") as HTMLImageElement;
 const enemyAImg = document.getElementById("enemyA") as HTMLImageElement;
 const enemyBImg = document.getElementById("enemyB") as HTMLImageElement;
 const enemyCImg = document.getElementById("enemyC") as HTMLImageElement;
