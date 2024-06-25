@@ -6,7 +6,7 @@ import Hp from "./classes/Hp";
 import Player from "./classes/Player";
 import StageMap from "./classes/StageMap";
 import "./style.css";
-import { BG_DIMENSIONS } from "./constants/general";
+import { ASPECT_RATIO, BG_DIMENSIONS, GAME_STATE } from "./constants/general";
 import { adjustedEnemyASpawn } from "./constants/enemyAData";
 import { adjustedEnemyBSpawn, isFlip } from "./constants/enemyBData";
 import { adjustedEnemyCSpawn } from "./constants/enemyCData";
@@ -15,17 +15,18 @@ import { adjustedEnemyCSpawn } from "./constants/enemyCData";
 const canvas = document.querySelector<HTMLCanvasElement>("#canvas")!;
 export const ctx = canvas.getContext("2d")!;
 
-ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
+ctx.canvas.width = window.innerHeight * ASPECT_RATIO;
 
 //VARIABLES DECLARATION
 const XImages = document.getElementById("X") as HTMLImageElement;
 const map = document.getElementById("map") as HTMLImageElement;
-// const weapons = document.getElementById("weapons") as HTMLImageElement;
+export const weapons = document.getElementById("weapons") as HTMLImageElement;
 const enemyAImg = document.getElementById("enemyA") as HTMLImageElement;
 const enemyBImg = document.getElementById("enemyB") as HTMLImageElement;
 const enemyCImg = document.getElementById("enemyC") as HTMLImageElement;
 export const itemImg = document.getElementById("items") as HTMLImageElement;
+let gameState = GAME_STATE.START;
 
 let lastTime = 0;
 const fpsInterval = 1000 / 60;
@@ -37,6 +38,19 @@ let dropItems: DropItem[];
 let hpBar: Hp;
 enemies = [];
 dropItems = [];
+
+window.addEventListener("keydown", (e) => {
+  switch (e.key) {
+    case "Enter":
+      if (
+        gameState === GAME_STATE.START ||
+        gameState === GAME_STATE.GAME_OVER
+      ) {
+        gameState = GAME_STATE.PLAYING;
+        setUp();
+      }
+  }
+});
 
 function setUp() {
   player = new Player(XImages);
@@ -54,8 +68,12 @@ function setUp() {
     let enemyC = new EnemyC(enemyCImg, enemy);
     enemies.push(enemyC);
   });
-
-  ctx.scale(3, 3);
+  ctx.scale(1, 1);
+  ctx.scale(
+    canvas.height / 258.6666666666667,
+    canvas.height / 258.6666666666667
+  );
+  requestAnimationFrame(gameLoop);
 }
 
 function gameLoop(timestamp: number) {
@@ -79,6 +97,12 @@ function gameLoop(timestamp: number) {
       BG_DIMENSIONS.WIDTH,
       BG_DIMENSIONS.HEIGHT
     );
+
+    if (gameState === GAME_STATE.GAME_OVER) {
+      console.log("game over");
+      return;
+    }
+
     stageMap.update();
     stageMap.draw();
     enemies.forEach((enemy, index) => {
@@ -87,6 +111,11 @@ function gameLoop(timestamp: number) {
     });
 
     player.update(enemies);
+    if (player.hp <= 0) {
+      gameState = GAME_STATE.GAME_OVER;
+      showGameOverScreen();
+      return;
+    }
     player.draw();
 
     dropItems.map((dropItem, index) => {
@@ -100,5 +129,28 @@ function gameLoop(timestamp: number) {
   requestAnimationFrame(gameLoop);
 }
 
-setUp();
-requestAnimationFrame(gameLoop);
+showMenu();
+function showMenu() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = "30px Arial";
+  ctx.fillStyle = "black";
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "Press Enter to Start",
+    canvas.width / 2,
+    canvas.height / 2 - 40
+  );
+}
+
+function showGameOverScreen() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = "30px Arial";
+  ctx.fillStyle = "black";
+  ctx.textAlign = "center";
+  ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2 - 40);
+  ctx.fillText(
+    "Press Enter to Restart",
+    canvas.width / 2,
+    canvas.height / 2 + 40
+  );
+}

@@ -1,8 +1,3 @@
-export const CANVAS_DIMENSIONS = {
-  WIDTH: window.innerWidth / 3,
-  HEIGHT: window.innerHeight / 3,
-};
-
 export const GRAVITY = 0.1;
 
 export const STAGGER_FRAMES = 5;
@@ -23,3 +18,16 @@ export const MAP_OFFSET = {
   X: -1536 / 3,
   Y: -BG_DIMENSIONS.HEIGHT + (776 / 3) * 3.5 - 30,
 };
+
+export const ASPECT_RATIO = 720 / 776;
+
+export const CANVAS_DIMENSIONS = {
+  WIDTH: (window.innerHeight * ASPECT_RATIO) / 3,
+  HEIGHT: window.innerHeight / 3,
+};
+
+export enum GAME_STATE {
+  START = "START",
+  PLAYING = "PLAYING",
+  GAME_OVER = "GAME_OVER",
+}

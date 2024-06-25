@@ -130,6 +130,7 @@ export default class Player extends Sprite implements IPlayer {
     }
 
     const projectile = new Projectile(
+      !this.isGoingRight,
       this.isGoingRight ? this.x + this.hitBox.width : this.x,
       this.y + this.hitBox.height / 2,
       dx,
