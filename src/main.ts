@@ -1,3 +1,4 @@
+import DropItem from "./classes/DropItem";
 import Enemy from "./classes/Enemy";
 import EnemyA from "./classes/EnemyA";
 import EnemyB from "./classes/EnemyB";
@@ -22,9 +23,10 @@ ctx.canvas.height = window.innerHeight;
 const XImages = document.getElementById("X") as HTMLImageElement;
 const map = document.getElementById("map") as HTMLImageElement;
 const weapons = document.getElementById("weapons") as HTMLImageElement;
-const enemyAimg = document.getElementById("enemyA") as HTMLImageElement;
-const enemyBimg = document.getElementById("enemyB") as HTMLImageElement;
-const enemyCimg = document.getElementById("enemyC") as HTMLImageElement;
+const enemyAImg = document.getElementById("enemyA") as HTMLImageElement;
+const enemyBImg = document.getElementById("enemyB") as HTMLImageElement;
+const enemyCImg = document.getElementById("enemyC") as HTMLImageElement;
+export const itemImg = document.getElementById("items") as HTMLImageElement;
 
 let lastTime = 0;
 const fpsInterval = 1000 / 60;
@@ -32,23 +34,25 @@ const fpsInterval = 1000 / 60;
 let player: Player;
 let stageMap: StageMap;
 let enemies: (EnemyA | EnemyB | EnemyC)[]; //array of different enemies
+let dropItems: DropItem[];
 let hpBar: Hp;
 enemies = [];
+dropItems = [];
 
 function setUp() {
   player = new Player(XImages);
   stageMap = new StageMap(map);
   hpBar = new Hp();
   adjustedEnemyASpawn.forEach((enemy) => {
-    let enemyA = new EnemyA(enemyAimg, enemy);
+    let enemyA = new EnemyA(enemyAImg, enemy);
     enemies.push(enemyA);
   });
   adjustedEnemyBSpawn.forEach((enemy, index) => {
-    let enemyB = new EnemyB(enemyBimg, enemy, isFlip[index]);
+    let enemyB = new EnemyB(enemyBImg, enemy, isFlip[index]);
     enemies.push(enemyB);
   });
   adjustedEnemyCSpawn.forEach((enemy) => {
-    let enemyC = new EnemyC(enemyCimg, enemy);
+    let enemyC = new EnemyC(enemyCImg, enemy);
     enemies.push(enemyC);
   });
 
@@ -79,12 +83,17 @@ function gameLoop(timestamp: number) {
     stageMap.update();
     stageMap.draw();
     enemies.forEach((enemy, index) => {
-      enemy.update(player, enemies, index);
+      enemy.update(player, enemies, dropItems, index);
       enemy.draw();
     });
-
+    console.log(dropItems);
     player.update(enemies);
     player.draw();
+
+    dropItems.map((dropItem, index) => {
+      dropItem.update(player, dropItems, index);
+      dropItem.draw();
+    });
 
     hpBar.update(player);
     hpBar.draw();

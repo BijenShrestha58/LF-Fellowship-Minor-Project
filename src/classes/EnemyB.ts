@@ -5,6 +5,9 @@ import { CANVAS_DIMENSIONS, STAGGER_FRAMES } from "../utils/constants";
 import Enemy from "./Enemy";
 import { enemyBSpritePositions } from "../utils/spriteArrays/enemyBData";
 import EnemyProjectile from "./EnemyProjectile";
+import EnemyA from "./EnemyA";
+import EnemyC from "./EnemyC";
+import DropItem from "./DropItem";
 
 export default class EnemyB extends Enemy {
   patrolDistance: number;
@@ -13,6 +16,7 @@ export default class EnemyB extends Enemy {
   image: HTMLImageElement;
   holdCount: number;
   frameHold: number;
+  initY: number;
 
   constructor(image: HTMLImageElement, position: IPosition, isFlip: boolean) {
     let dimensions: IDimensions = { width: 30, height: 30 };
@@ -63,6 +67,7 @@ export default class EnemyB extends Enemy {
     this.holdCount = 0;
     this.frameHold = 10;
     this.isFlipX = isFlip;
+    this.initY = this.y;
   }
 
   shootProjectile(player: IPlayer) {
@@ -84,12 +89,19 @@ export default class EnemyB extends Enemy {
     this.projectiles.push(projectile);
   }
 
-  update(player: IPlayer, enemies: EnemyB[], index: number) {
+  update(
+    player: IPlayer,
+    enemies: (EnemyA | EnemyB | EnemyC)[],
+    dropItems: DropItem[],
+    index: number
+  ) {
     // // Call the parent update method
-    let tempY = this.y;
-    super.update(player, enemies, index);
-    this.dy = 0;
-    this.y = tempY;
+
+    super.update(player, enemies, dropItems, index);
+    this.y += this.dy;
+    if (Math.abs(this.y - this.initY) > 20) {
+      this.dy = -this.dy;
+    }
 
     this.gameFrame++;
     if (this.gameFrame >= STAGGER_FRAMES) {

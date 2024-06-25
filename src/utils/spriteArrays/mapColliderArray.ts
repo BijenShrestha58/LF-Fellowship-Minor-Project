@@ -243,6 +243,84 @@ export const mapColliderArray: ISolidObject[] = [
     width: 967.81,
     height: 16.33,
   },
+  {
+    x: 2520,
+    y: 1954,
+    width: 159,
+    height: 32,
+  },
+  {
+    x: 2503,
+    y: 1961,
+    width: 191,
+    height: 32,
+  },
+  {
+    x: 2527,
+    y: 1949,
+    width: 143,
+    height: 32,
+  },
+  {
+    x: 2539,
+    y: 1943,
+    width: 120,
+    height: 32,
+  },
+  {
+    x: 2488,
+    y: 1968,
+    width: 220,
+    height: 18,
+  },
+  {
+    x: 2479,
+    y: 1973,
+    width: 90,
+    height: 15,
+  },
+  {
+    x: 2468,
+    y: 1978,
+    width: 109,
+    height: 15,
+  },
+  {
+    x: 2811,
+    y: 1967,
+    width: 120,
+    height: 27,
+  },
+  {
+    x: 2826,
+    y: 1959,
+    width: 88,
+    height: 27,
+  },
+  {
+    x: 2819,
+    y: 1963,
+    width: 102,
+    height: 27,
+  },
+  {
+    x: 2846,
+    y: 1977,
+    width: 102,
+    height: 27,
+  },
+  {
+    x: 2852,
+    y: 1980,
+    width: 102,
+    height: 27,
+  },
+  {
+    x: 2859,
+    y: 1983,
+    width: 102,
+    height: 27,
+  },
 ];
 
 /**

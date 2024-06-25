@@ -52,21 +52,6 @@ export default class CameraBox implements ISolidObject {
   panCameraRight(player: IPlayer) {
     const cameraBoxLeftSide = this.x;
 
-    // for (let i = 0; i < panStoppers.length; i++) {
-    //   if (
-    //     cameraBoxLeftSide >= panStoppers[i] + MAP_OFFSET.X &&
-    //     player.x <= panStoppers[i] + MAP_OFFSET.X
-    //   )
-    //     return;
-    // }
-    // if (player.x >= CANVAS_DIMENSIONS.WIDTH + this.offsetX) {
-    //   ctx.translate(
-    //     -(cameraBoxLeftSide - (CANVAS_DIMENSIONS.WIDTH + this.offsetX)),
-    //     0
-    //   );
-    //   this.offsetX +=
-    //     cameraBoxLeftSide - (CANVAS_DIMENSIONS.WIDTH + this.offsetX);
-    // }
     if (cameraBoxLeftSide <= this.offsetX) {
       this.offsetX += player.dx;
       ctx.translate(-player.dx, 0);
@@ -101,16 +86,5 @@ export default class CameraBox implements ISolidObject {
     } else {
       this.panCameraDown(player);
     }
-  }
-
-  draw() {
-    // ctx.fillStyle = "rgba(0,0,255,0.9)";
-    // ctx.fillRect(this.x, this.y, this.width, this.height);
-    // ctx.fillRect(
-    //   CANVAS_DIMENSIONS.WIDTH - 20 + this.offsetX,
-    //   this.y - 20,
-    //   20,
-    //   20
-    // );
   }
 }

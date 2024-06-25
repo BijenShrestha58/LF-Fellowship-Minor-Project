@@ -356,7 +356,7 @@ export default class Player extends Sprite implements IPlayer {
     }
 
     this.cameraBox.update(this);
-    this.cameraBox.draw();
+
     this.updateProjectiles();
     this.immortalityFrameCount++;
   }

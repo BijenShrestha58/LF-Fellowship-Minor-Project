@@ -4,6 +4,7 @@ import { IPosition } from "../interfaces/IPosition";
 import { collisionGeneral } from "../utils/collision";
 import { GRAVITY } from "../utils/constants";
 import { adjustedColliders } from "../utils/spriteArrays/mapColliderArray";
+import DropItem from "./DropItem";
 import EnemyA from "./EnemyA";
 import EnemyB from "./EnemyB";
 import EnemyC from "./EnemyC";
@@ -65,6 +66,7 @@ export default class Enemy extends Sprite {
   update(
     player: IPlayer,
     enemies: (EnemyA | EnemyB | EnemyC)[],
+    dropItems: DropItem[],
     index: number
   ) {
     this.cooldownCounter++;
@@ -83,15 +85,28 @@ export default class Enemy extends Sprite {
     }
 
     this.projectileHit(player);
-    if (this.hp <= 0) this.destroy(enemies, index);
+    if (this.hp <= 0) this.destroy(enemies, dropItems, index);
   }
 
   draw() {
     super.draw();
   }
 
-  destroy(enemies: (EnemyA | EnemyB | EnemyC)[], index: number) {
+  destroy(
+    enemies: (EnemyA | EnemyB | EnemyC)[],
+    dropItems: DropItem[],
+    index: number
+  ) {
     enemies.splice(index, 1);
+    if (Math.random() < 0.2) {
+      const dropItem = new DropItem(
+        { x: this.x, y: this.y + this.height - 20 },
+        { width: 16, height: 12 },
+        5
+      );
+
+      dropItems.push(dropItem);
+    }
   }
 
   shouldShootProjectile(player: IPlayer) {

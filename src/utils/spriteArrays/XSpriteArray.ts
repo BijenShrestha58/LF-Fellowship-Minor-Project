@@ -23,14 +23,12 @@ export const XSpriteArray = [
       { x: 274, y: 57, width: 23, height: 46 },
       { x: 299, y: 57, width: 27, height: 46 },
       { x: 331, y: 57, width: 24, height: 46 },
-      // { x: 356, y: 57, width: 30, height: 46 },
     ],
     loop: false,
   },
   {
     name: "walk",
     pos: [
-      // { x: 106, y: 106, width: 30, height: 35 },
       { x: 137, y: 106, width: 20, height: 35 },
       { x: 158, y: 106, width: 23, height: 35 },
       { x: 181, y: 106, width: 32, height: 35 },
@@ -83,7 +81,6 @@ export const XSpriteArray = [
   {
     name: "walkShoot",
     pos: [
-      // { x: 61, y: 192, width: 35, height: 35 },
       { x: 97, y: 192, width: 29, height: 35 },
       { x: 126, y: 192, width: 32, height: 35 },
       { x: 158, y: 192, width: 35, height: 35 },

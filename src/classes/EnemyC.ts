@@ -5,6 +5,7 @@ import { CANVAS_DIMENSIONS, STAGGER_FRAMES } from "../utils/constants";
 import Enemy from "./Enemy";
 import { enemyCSpritePositions } from "../utils/spriteArrays/enemyCData";
 import EnemyProjectile from "./EnemyProjectile";
+import DropItem from "./DropItem";
 
 export default class EnemyC extends Enemy {
   patrolDistance: number;
@@ -83,9 +84,14 @@ export default class EnemyC extends Enemy {
     this.projectiles.push(projectile);
   }
 
-  update(player: IPlayer, enemies: EnemyC[], index: number) {
+  update(
+    player: IPlayer,
+    enemies: EnemyC[],
+    dropItems: DropItem[],
+    index: number
+  ) {
     // Call the parent update method
-    super.update(player, enemies, index);
+    super.update(player, enemies, dropItems, index);
     this.gameFrame++;
     if (this.gameFrame >= STAGGER_FRAMES) {
       this.gameFrame = 0;
