@@ -1,9 +1,9 @@
 import { IDimensions } from "../interfaces/IDimensions";
 import { IPlayer } from "../interfaces/IPlayer";
 import { IPosition } from "../interfaces/IPosition";
-import { CANVAS_DIMENSIONS, STAGGER_FRAMES } from "../utils/constants";
+import { CANVAS_DIMENSIONS, STAGGER_FRAMES } from "../constants/general";
 import Enemy from "./Enemy";
-import { enemyBSpritePositions } from "../utils/spriteArrays/enemyBData";
+import { enemyBSpritePositions } from "../constants/enemyBData";
 import EnemyProjectile from "./EnemyProjectile";
 import EnemyA from "./EnemyA";
 import EnemyC from "./EnemyC";

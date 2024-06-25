@@ -7,10 +7,10 @@ import Hp from "./classes/Hp";
 import Player from "./classes/Player";
 import StageMap from "./classes/StageMap";
 import "./style.css";
-import { BG_DIMENSIONS } from "./utils/constants";
-import { adjustedEnemyASpawn } from "./utils/spriteArrays/enemyAData";
-import { adjustedEnemyBSpawn, isFlip } from "./utils/spriteArrays/enemyBData";
-import { adjustedEnemyCSpawn } from "./utils/spriteArrays/enemyCData";
+import { BG_DIMENSIONS } from "./constants/general";
+import { adjustedEnemyASpawn } from "./constants/enemyAData";
+import { adjustedEnemyBSpawn, isFlip } from "./constants/enemyBData";
+import { adjustedEnemyCSpawn } from "./constants/enemyCData";
 
 //CANVAS SETUP
 const canvas = document.querySelector<HTMLCanvasElement>("#canvas")!;

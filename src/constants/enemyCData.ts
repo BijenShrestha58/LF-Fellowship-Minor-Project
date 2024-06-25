@@ -1,5 +1,5 @@
-import { IPosition } from "../../interfaces/IPosition";
-import { MAP_OFFSET } from "../constants";
+import { IPosition } from "../interfaces/IPosition";
+import { MAP_OFFSET } from "./general";
 
 export const enemyCSpawn: IPosition[] = [
   { x: 2249, y: 1940 },

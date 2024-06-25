@@ -5,8 +5,8 @@ import {
   CANVAS_DIMENSIONS,
   MAP_OFFSET,
   PLAYER_HIT_BOX,
-} from "../utils/constants";
-import { panStoppers } from "../utils/spriteArrays/panStoppers";
+} from "../constants/general";
+import { panStoppers } from "../constants/panStoppers";
 
 export default class CameraBox implements ISolidObject {
   x: number;

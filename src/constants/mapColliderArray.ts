@@ -1,5 +1,5 @@
-import { ISolidObject } from "../../interfaces/ISolidObject";
-import { MAP_OFFSET } from "../constants";
+import { ISolidObject } from "../interfaces/ISolidObject";
+import { MAP_OFFSET } from "./general";
 
 export const mapColliderArray: ISolidObject[] = [
   {

@@ -1,7 +1,7 @@
 import { IDimensions } from "../interfaces/IDimensions";
 import { IPosition } from "../interfaces/IPosition";
 import { ISprite } from "../interfaces/ISprite";
-import { STAGGER_FRAMES } from "../utils/constants";
+import { STAGGER_FRAMES } from "../constants/general";
 import { ctx } from "../main";
 
 export default class Sprite implements ISprite {

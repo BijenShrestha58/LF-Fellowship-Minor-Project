@@ -1,8 +1,8 @@
 import { IPlayer } from "../interfaces/IPlayer";
 import Sprite from "./Sprite";
-import { XSpriteArray } from "../utils/spriteArrays/XSpriteArray";
-import { GRAVITY, MAX_DY, PLAYER_HIT_BOX } from "../utils/constants";
-import { adjustedColliders } from "../utils/spriteArrays/mapColliderArray";
+import { XSpriteArray } from "../constants/XSpriteArray.ts";
+import { GRAVITY, MAX_DY, PLAYER_HIT_BOX } from "../constants/general.ts";
+import { adjustedColliders } from "../constants/mapColliderArray.ts";
 import { collision, collisionGeneral } from "../utils/collision.ts";
 import CameraBox from "./CameraBox.ts";
 import Projectile from "./Projectile.ts";

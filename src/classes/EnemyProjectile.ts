@@ -1,5 +1,5 @@
 import { ctx } from "../main";
-import { GRAVITY } from "../utils/constants";
+import { GRAVITY } from "../constants/general";
 
 export default class EnemyProjectile {
   image: HTMLImageElement;

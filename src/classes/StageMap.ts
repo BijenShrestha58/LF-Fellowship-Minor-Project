@@ -1,7 +1,7 @@
 import { IStageMap } from "../interfaces/IStageMap";
 import { ctx } from "../main";
-import { MAP_OFFSET } from "../utils/constants";
-import { BG_DIMENSIONS } from "../utils/constants";
+import { MAP_OFFSET } from "../constants/general";
+import { BG_DIMENSIONS } from "../constants/general";
 
 export default class StageMap implements IStageMap {
   image: HTMLImageElement;
