@@ -1,3 +1,4 @@
+import EnemyA from "../classes/EnemyA";
 import Projectile from "../classes/Projectile";
 import { IDimensions } from "./IDimensions";
 import { ISolidObject } from "./ISolidObject";
@@ -22,11 +23,15 @@ export interface IPlayer extends ISprite {
   maxShootInterval: number;
   cameraBox: ISolidObject;
   chargeTime: number;
+  immortalityFrames: number;
+  immortalityFrameCount: number;
   projectiles: Projectile[];
+  recoil: number;
+  maxHp: number;
 
   shoot: (isShooting: boolean) => void;
   charge: (isCharging: boolean) => void;
   wallClimb: (isWallClimb: boolean) => void;
   draw: () => void;
-  update: () => void;
+  update: (enemies: EnemyA[]) => void;
 }

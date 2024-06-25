@@ -1,5 +1,6 @@
 import Enemy from "./classes/Enemy";
 import EnemyA from "./classes/EnemyA";
+import Hp from "./classes/Hp";
 import Player from "./classes/Player";
 import StageMap from "./classes/StageMap";
 import "./style.css";
@@ -24,11 +25,13 @@ const fpsInterval = 1000 / 60;
 let player: Player;
 let stageMap: StageMap;
 let enemies: EnemyA[]; //use union here (EnemyA|EnemyB)[]
+let hpBar: Hp;
 enemies = [];
 
 function setUp() {
   player = new Player(XImages);
   stageMap = new StageMap(map);
+  hpBar = new Hp();
   adjustedEnemyASpawn.forEach((enemy) => {
     let enemyA = new EnemyA(enemyAimg, enemy);
     enemies.push(enemyA);
@@ -54,8 +57,11 @@ function gameLoop(timestamp: number) {
       enemy.draw();
     });
 
-    player.update();
+    player.update(enemies);
     player.draw();
+
+    hpBar.update(player);
+    hpBar.draw();
   }
   requestAnimationFrame(gameLoop);
 }

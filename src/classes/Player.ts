@@ -8,9 +8,11 @@ import {
   PLAYER_HIT_BOX,
 } from "../utils/constants";
 import { adjustedColliders } from "../utils/spriteArrays/mapColliderArray";
-import { collision } from "../utils/collision.ts";
+import { collision, collisionGeneral } from "../utils/collision.ts";
 import CameraBox from "./CameraBox.ts";
 import Projectile from "./Projectile.ts";
+import EnemyA from "./EnemyA.ts";
+import { ctx } from "../main.ts";
 
 export default class Player extends Sprite implements IPlayer {
   lives: number;
@@ -31,8 +33,13 @@ export default class Player extends Sprite implements IPlayer {
   cameraBox: CameraBox;
   projectiles: Projectile[];
   chargeTime: number;
+  immortalityFrames: number;
+  immortalityFrameCount: number;
+  recoil: number;
+  maxHp: number;
 
   constructor(image: HTMLImageElement) {
+    let maxHpValue = 10;
     super(
       image,
       { x: 323, y: 17 }, //position in spritesheet
@@ -47,7 +54,7 @@ export default class Player extends Sprite implements IPlayer {
       false, //descent
       false, //isFlipX
       { width: PLAYER_HIT_BOX.WIDTH, height: PLAYER_HIT_BOX.HEIGHT }, //hitbox
-      10 //hp
+      maxHpValue //hp
     );
     this.image = image;
 
@@ -70,7 +77,11 @@ export default class Player extends Sprite implements IPlayer {
     this.currentState = "idle"; // Initial state
     this.keys = new Set<string>();
     this.projectiles = [];
+    this.immortalityFrameCount = 100;
+    this.immortalityFrames = 100;
     this.chargeTime = 0;
+    this.recoil = 20;
+    this.maxHp = maxHpValue;
 
     document.addEventListener("keydown", (e) => this.keyDown(e));
     document.addEventListener("keyup", (e) => this.keyUp(e));
@@ -250,8 +261,8 @@ export default class Player extends Sprite implements IPlayer {
       projectile.update();
       // Remove projectile if it goes off screen
       if (
-        projectile.x > this.cameraBox.x + this.cameraBox.width * 2 ||
-        projectile.x < this.cameraBox.x - this.cameraBox.width * 2
+        projectile.x > this.cameraBox.x + this.cameraBox.width * 1.5 ||
+        projectile.x < this.cameraBox.x - this.cameraBox.width * 1.5
       ) {
         this.projectiles.splice(index, 1);
       }
@@ -264,7 +275,19 @@ export default class Player extends Sprite implements IPlayer {
     });
   }
 
-  update() {
+  enemyCollisionDetection(enemies: EnemyA[]) {
+    enemies.forEach((enemy) => {
+      if (collisionGeneral(enemy, this)) {
+        if (this.immortalityFrameCount >= this.immortalityFrames) {
+          this.hp -= enemy.damage;
+          this.immortalityFrameCount = 0;
+          this.x -= this.isGoingRight ? this.recoil : -this.recoil;
+        }
+      }
+    });
+  }
+
+  update(enemies: EnemyA[]) {
     //idle if no inputs being given
     if (this.keys.size === 0) {
       this.idle();
@@ -329,10 +352,23 @@ export default class Player extends Sprite implements IPlayer {
     this.cameraBox.update(this);
     this.cameraBox.draw();
     this.updateProjectiles();
+    this.enemyCollisionDetection(enemies);
+    this.immortalityFrameCount++;
   }
 
   draw() {
-    super.draw();
+    if (
+      this.immortalityFrames > this.immortalityFrameCount &&
+      this.immortalityFrameCount % 2 === 0
+    ) {
+      ctx.save();
+      ctx.filter = "brightness(0) invert(1)";
+      super.draw();
+      ctx.restore();
+    } else {
+      super.draw();
+    }
+
     this.drawProjectiles(); // Draw projectiles
   }
 }
