@@ -278,7 +278,7 @@ export default class Player extends Sprite implements IPlayer {
 
     //gravity calcs
     this.dy += GRAVITY;
-    this.dx = 0;
+    this.dx = 0; //reset dx every iteration
     this.movement();
     this.isWallClimb = false;
     adjustedColliders.forEach((collider) => {

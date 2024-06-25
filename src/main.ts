@@ -49,8 +49,8 @@ function gameLoop(timestamp: number) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     stageMap.update();
     stageMap.draw();
-    enemies.forEach((enemy) => {
-      enemy.update();
+    enemies.forEach((enemy, index) => {
+      enemy.update(player, enemies, index);
       enemy.draw();
     });
 

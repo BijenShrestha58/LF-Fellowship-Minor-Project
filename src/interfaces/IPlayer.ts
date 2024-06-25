@@ -1,3 +1,4 @@
+import Projectile from "../classes/Projectile";
 import { IDimensions } from "./IDimensions";
 import { ISolidObject } from "./ISolidObject";
 import { ISprite } from "./ISprite";
@@ -21,6 +22,7 @@ export interface IPlayer extends ISprite {
   maxShootInterval: number;
   cameraBox: ISolidObject;
   chargeTime: number;
+  projectiles: Projectile[];
 
   shoot: (isShooting: boolean) => void;
   charge: (isCharging: boolean) => void;

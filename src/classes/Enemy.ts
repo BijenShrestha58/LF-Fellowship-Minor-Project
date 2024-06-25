@@ -2,7 +2,10 @@ import { IDimensions } from "../interfaces/IDimensions";
 import { IPlayer } from "../interfaces/IPlayer";
 import { IPosition } from "../interfaces/IPosition";
 import { ctx } from "../main";
-import { collisionGeneral } from "../utils/collision";
+import { collision, collisionGeneral } from "../utils/collision";
+import { GRAVITY } from "../utils/constants";
+import { adjustedColliders } from "../utils/spriteArrays/mapColliderArray";
+import EnemyA from "./EnemyA";
 import Sprite from "./Sprite";
 
 export default class Enemy extends Sprite {
@@ -43,32 +46,48 @@ export default class Enemy extends Sprite {
     this.damage = damage;
   }
 
-  update() {
+  update(player: IPlayer, enemies: EnemyA[], index: number) {
     // Example movement logic, can be replaced with specific enemy behavior
+    this.dy += GRAVITY;
     this.x += this.dx;
     this.y += this.dy;
 
-    // Add gravity, collision checks, and other logic here
+    adjustedColliders.forEach((collider) => {
+      if (collisionGeneral(this, collider)) {
+        this.dy = 0;
+        this.y = collider.y - this.height;
+      }
+    });
+
+    this.projectileHit(player);
+    if (this.hp <= 0) this.destroy(enemies, index);
   }
 
   draw() {
     super.draw();
   }
 
-  takeDamage(amount: number) {
-    this.hp -= amount;
-    if (this.hp <= 0) {
-      this.destroy();
-    }
+  destroy(enemies: EnemyA[], index: number) {
+    enemies.splice(index, 1);
   }
 
-  destroy() {
-    // Logic for removing the enemy from the game
-  }
-
-  checkCollision(player: IPlayer, damage: number) {
-    if (collisionGeneral(this, player)) {
-      player.hp -= damage;
-    }
+  projectileHit(player: IPlayer) {
+    player.projectiles.forEach((projectile, index) => {
+      if (
+        collisionGeneral(
+          {
+            x: this.x + this.width - this.hitBox.width,
+            y: this.y + this.height - this.hitBox.height,
+            width: this.hitBox.width,
+            height: this.hitBox.height,
+          },
+          projectile
+        )
+      ) {
+        if (projectile.size === "small" || this.hp > projectile.damage)
+          player.projectiles.splice(index, 1);
+        this.hp -= projectile.damage;
+      }
+    });
   }
 }

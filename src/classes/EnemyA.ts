@@ -24,8 +24,8 @@ export default class EnemyA extends Enemy {
     let gameFrame: number = 0;
     let descent: boolean = false;
     let isFlipX: boolean = false;
-    let hitBox: IDimensions = { width: 50, height: 50 };
-    let hp: number = 10;
+    let hitBox: IDimensions = { width: 27, height: 32 };
+    let hp: number = 3;
     let damage: number = 1;
     let patrolDistance: number = 100;
     let dx: number = 0;
@@ -58,7 +58,7 @@ export default class EnemyA extends Enemy {
     this.frameHold = 10;
   }
 
-  update() {
+  update(player: IPlayer, enemies: EnemyA[], index: number) {
     // Patrol behavior
     this.x += this.dx * this.patrolDirection;
 
@@ -75,7 +75,7 @@ export default class EnemyA extends Enemy {
     this.y += this.dy;
 
     // Call the parent update method for any additional logic
-    super.update();
+    super.update(player, enemies, index);
     this.gameFrame++;
     if (this.gameFrame >= STAGGER_FRAMES) {
       this.gameFrame = 0;
