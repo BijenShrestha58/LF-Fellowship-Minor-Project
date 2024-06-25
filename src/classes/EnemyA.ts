@@ -51,7 +51,8 @@ export default class EnemyA extends Enemy {
       damage,
       range,
       cooldown,
-      cooldownCounter
+      cooldownCounter,
+      false
     );
     this.x = position.x;
     this.y = position.y;
@@ -70,7 +71,7 @@ export default class EnemyA extends Enemy {
       86,
       8,
       8,
-      this.x,
+      this.isFlipX ? this.x + this.width : this.x,
       this.y,
       -((this.x - player.x) / this.range) * 1.5,
       -3,
@@ -83,9 +84,8 @@ export default class EnemyA extends Enemy {
   }
 
   update(player: IPlayer, enemies: EnemyA[], index: number) {
-    this.y += this.dy;
-
     // Call the parent update method
+    player.x > this.x ? (this.isFlipX = true) : (this.isFlipX = false);
     super.update(player, enemies, index);
     this.gameFrame++;
     if (this.gameFrame >= STAGGER_FRAMES) {

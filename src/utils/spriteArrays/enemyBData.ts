@@ -2,12 +2,14 @@ import { IPosition } from "../../interfaces/IPosition";
 import { MAP_OFFSET } from "../constants";
 
 export const enemyBSpawn: IPosition[] = [
-  { x: 1218, y: 1357 },
+  { x: 1226, y: 1357 },
   { x: 1060, y: 1597 },
   { x: 1317, y: 1592 },
-  { x: 1823, y: 1857 },
-  { x: 2989, y: 1827 },
+  { x: 1829, y: 1857 },
+  { x: 2999, y: 1827 },
 ];
+
+export const isFlip: boolean[] = [true, false, false, false, true];
 
 export const adjustedEnemyBSpawn: IPosition[] = enemyBSpawn.map((enemyB) => ({
   x: enemyB.x + MAP_OFFSET.X,

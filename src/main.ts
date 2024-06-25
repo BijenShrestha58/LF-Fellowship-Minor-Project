@@ -8,7 +8,7 @@ import StageMap from "./classes/StageMap";
 import "./style.css";
 import { BG_DIMENSIONS } from "./utils/constants";
 import { adjustedEnemyASpawn } from "./utils/spriteArrays/enemyAData";
-import { adjustedEnemyBSpawn } from "./utils/spriteArrays/enemyBData";
+import { adjustedEnemyBSpawn, isFlip } from "./utils/spriteArrays/enemyBData";
 import { adjustedEnemyCSpawn } from "./utils/spriteArrays/enemyCData";
 
 //CANVAS SETUP
@@ -43,8 +43,8 @@ function setUp() {
     let enemyA = new EnemyA(enemyAimg, enemy);
     enemies.push(enemyA);
   });
-  adjustedEnemyBSpawn.forEach((enemy) => {
-    let enemyB = new EnemyB(enemyBimg, enemy);
+  adjustedEnemyBSpawn.forEach((enemy, index) => {
+    let enemyB = new EnemyB(enemyBimg, enemy, isFlip[index]);
     enemies.push(enemyB);
   });
   adjustedEnemyCSpawn.forEach((enemy) => {
@@ -63,8 +63,19 @@ function gameLoop(timestamp: number) {
     lastTime = timestamp - (elapsed % fpsInterval);
 
     // Game logic and drawing code
-    ctx.clearRect(0, 0, BG_DIMENSIONS.WIDTH, BG_DIMENSIONS.HEIGHT);
-    ctx.fillRect(0, 0, BG_DIMENSIONS.WIDTH, BG_DIMENSIONS.HEIGHT);
+    ctx.fillStyle = "#606888";
+    ctx.clearRect(
+      player.cameraBox.offsetX,
+      player.cameraBox.offsetY,
+      BG_DIMENSIONS.WIDTH,
+      BG_DIMENSIONS.HEIGHT
+    );
+    ctx.fillRect(
+      player.cameraBox.offsetX,
+      player.cameraBox.offsetY,
+      BG_DIMENSIONS.WIDTH,
+      BG_DIMENSIONS.HEIGHT
+    );
     stageMap.update();
     stageMap.draw();
     enemies.forEach((enemy, index) => {

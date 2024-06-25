@@ -23,8 +23,8 @@ export default class EnemyC extends Enemy {
     let gameFrame: number = 0;
     let descent: boolean = false;
     let isFlipX: boolean = false;
-    let hitBox: IDimensions = { width: 27, height: 32 };
-    let hp: number = 3;
+    let hitBox: IDimensions = { width: 38, height: 45 };
+    let hp: number = 6;
     let damage: number = 1;
     let patrolDistance: number = 100;
     let dx: number = 0;
@@ -51,7 +51,8 @@ export default class EnemyC extends Enemy {
       damage,
       range,
       cooldown,
-      cooldownCounter
+      cooldownCounter,
+      false
     );
     this.x = position.x;
     this.y = position.y;
@@ -83,8 +84,6 @@ export default class EnemyC extends Enemy {
   }
 
   update(player: IPlayer, enemies: EnemyC[], index: number) {
-    this.y += this.dy;
-
     // Call the parent update method
     super.update(player, enemies, index);
     this.gameFrame++;

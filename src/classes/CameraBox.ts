@@ -104,13 +104,13 @@ export default class CameraBox implements ISolidObject {
   }
 
   draw() {
-    ctx.fillStyle = "rgba(0,0,255,0.9)";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-    ctx.fillRect(
-      CANVAS_DIMENSIONS.WIDTH - 20 + this.offsetX,
-      this.y - 20,
-      20,
-      20
-    );
+    // ctx.fillStyle = "rgba(0,0,255,0.9)";
+    // ctx.fillRect(this.x, this.y, this.width, this.height);
+    // ctx.fillRect(
+    //   CANVAS_DIMENSIONS.WIDTH - 20 + this.offsetX,
+    //   this.y - 20,
+    //   20,
+    //   20
+    // );
   }
 }

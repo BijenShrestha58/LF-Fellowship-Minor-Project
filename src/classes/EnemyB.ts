@@ -14,7 +14,7 @@ export default class EnemyB extends Enemy {
   holdCount: number;
   frameHold: number;
 
-  constructor(image: HTMLImageElement, position: IPosition) {
+  constructor(image: HTMLImageElement, position: IPosition, isFlip: boolean) {
     let dimensions: IDimensions = { width: 30, height: 30 };
     let spritePosition: IPosition = { x: 0, y: 0 }; // Position in spritesheet
     let spriteDimensions: IDimensions = { width: 50, height: 50 }; // Dimensions in spritesheet
@@ -22,13 +22,13 @@ export default class EnemyB extends Enemy {
     let frameX: number = 0;
     let gameFrame: number = 0;
     let descent: boolean = false;
-    let isFlipX: boolean = false;
-    let hitBox: IDimensions = { width: 27, height: 32 };
-    let hp: number = 3;
+    let isFlipX: boolean = true;
+    let hitBox: IDimensions = { width: 30, height: 37 };
+    let hp: number = 1.5;
     let damage: number = 1;
     let patrolDistance: number = 100;
     let dx: number = 0;
-    let dy: number = 0;
+    let dy: number = 1;
     let range: number = CANVAS_DIMENSIONS.WIDTH / 2;
     let cooldown: number = 100;
     let cooldownCounter: number = 0;
@@ -51,7 +51,8 @@ export default class EnemyB extends Enemy {
       damage,
       range,
       cooldown,
-      cooldownCounter
+      cooldownCounter,
+      true
     );
     this.x = position.x;
     this.y = position.y;
@@ -61,6 +62,7 @@ export default class EnemyB extends Enemy {
     this.patrolDirection = 1;
     this.holdCount = 0;
     this.frameHold = 10;
+    this.isFlipX = isFlip;
   }
 
   shootProjectile(player: IPlayer) {
@@ -83,10 +85,12 @@ export default class EnemyB extends Enemy {
   }
 
   update(player: IPlayer, enemies: EnemyB[], index: number) {
-    this.y += this.dy;
-
-    // Call the parent update method
+    // // Call the parent update method
+    let tempY = this.y;
     super.update(player, enemies, index);
+    this.dy = 0;
+    this.y = tempY;
+
     this.gameFrame++;
     if (this.gameFrame >= STAGGER_FRAMES) {
       this.gameFrame = 0;
