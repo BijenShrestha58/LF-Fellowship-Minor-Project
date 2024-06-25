@@ -86,7 +86,7 @@ function gameLoop(timestamp: number) {
       enemy.update(player, enemies, dropItems, index);
       enemy.draw();
     });
-    console.log(dropItems);
+
     player.update(enemies);
     player.draw();
 

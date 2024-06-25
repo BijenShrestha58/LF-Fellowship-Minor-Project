@@ -296,7 +296,7 @@ export default class Player extends Sprite implements IPlayer {
     }
 
     //gravity calcs
-    console.log(this.isWallClimb);
+
     if (this.isWallClimb) {
       this.dy += GRAVITY / 2;
     } else {
