@@ -9,6 +9,8 @@ export const enemyASpawn: IPosition[] = [
   { x: 1447, y: 1661 },
   { x: 1623, y: 1629 },
   { x: 1797, y: 1693 },
+  { x: 1893, y: 1693 },
+  { x: 3295, y: 1630 },
 ];
 
 export const adjustedEnemyASpawn: IPosition[] = enemyASpawn.map((enemyA) => ({

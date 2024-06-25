@@ -13,6 +13,7 @@ import CameraBox from "./CameraBox.ts";
 import Projectile from "./Projectile.ts";
 import EnemyA from "./EnemyA.ts";
 import { ctx } from "../main.ts";
+import EnemyProjectile from "./EnemyProjectile.ts";
 
 export default class Player extends Sprite implements IPlayer {
   lives: number;
@@ -170,7 +171,7 @@ export default class Player extends Sprite implements IPlayer {
   jump() {
     this.dy -= this.jumpForce;
     if (this.isWallClimb) {
-      this.dx -= this.isGoingRight ? 5 : -5;
+      this.dx -= this.isGoingRight ? 10 : -10;
     }
     if (!this.isShooting) this.setState("jump");
   }
@@ -275,13 +276,13 @@ export default class Player extends Sprite implements IPlayer {
     });
   }
 
-  enemyCollisionDetection(enemies: EnemyA[]) {
+  enemyCollisionDetection(enemies: EnemyA[] | EnemyProjectile[]) {
     enemies.forEach((enemy) => {
       if (collisionGeneral(enemy, this)) {
         if (this.immortalityFrameCount >= this.immortalityFrames) {
           this.hp -= enemy.damage;
           this.immortalityFrameCount = 0;
-          this.x -= this.isGoingRight ? this.recoil : -this.recoil;
+          this.dx -= this.isGoingRight ? this.recoil : -this.recoil;
         }
       }
     });
@@ -300,10 +301,20 @@ export default class Player extends Sprite implements IPlayer {
     }
 
     //gravity calcs
-    this.dy += GRAVITY;
+    console.log(this.isWallClimb);
+    if (this.isWallClimb) {
+      this.dy += GRAVITY / 2;
+    } else {
+      this.dy += GRAVITY;
+    }
     this.dx = 0; //reset dx every iteration
+
     this.movement();
+
     this.isWallClimb = false;
+    this.enemyCollisionDetection(enemies);
+    enemies.forEach((enemy) => this.enemyCollisionDetection(enemy.projectiles));
+
     adjustedColliders.forEach((collider) => {
       collision(this, collider);
     });
@@ -352,7 +363,6 @@ export default class Player extends Sprite implements IPlayer {
     this.cameraBox.update(this);
     this.cameraBox.draw();
     this.updateProjectiles();
-    this.enemyCollisionDetection(enemies);
     this.immortalityFrameCount++;
   }
 

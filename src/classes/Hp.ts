@@ -21,11 +21,24 @@ export default class Hp {
     ctx.fillRect(10, 10, this.width, this.maxHeight);
     ctx.strokeRect(10, 10, this.width, this.maxHeight);
     ctx.fillStyle = "green";
+
     ctx.fillRect(
       10,
       10 + this.maxHeight - this.height,
       this.width,
       this.height
     );
+    for (
+      let i = this.maxHeight / this.unitHeight;
+      i > this.maxHeight / this.unitHeight - this.height / this.unitHeight;
+      i--
+    ) {
+      ctx.strokeRect(
+        10,
+        10 + this.unitHeight * (i - 1),
+        this.width,
+        this.unitHeight
+      );
+    }
   }
 }

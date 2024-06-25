@@ -1,6 +1,15 @@
 import { IPlayer } from "../interfaces/IPlayer";
 import { ISolidObject } from "../interfaces/ISolidObject";
 
+/**
+ * Checks for a collision between two solid objects.
+ *
+ * @param {ISolidObject} object1 - The first solid object.
+ * @param {ISolidObject} object2 - The second solid object.
+ * @returns {boolean} `true` if the objects are colliding, `false` otherwise.
+ *
+ * This function checks if the bounding boxes of two objects overlap.
+ */
 export function collisionGeneral(object1: ISolidObject, object2: ISolidObject) {
   return (
     object1.y + object1.height >= object2.y &&
@@ -10,6 +19,15 @@ export function collisionGeneral(object1: ISolidObject, object2: ISolidObject) {
   );
 }
 
+/**
+ * Checks for and resolves collisions between a player and a platform.
+ *
+ * @param {IPlayer} player - The player object.
+ * @param {ISolidObject} platform - The platform object.
+ * @returns {void}
+ *
+ * Handles vertical and horizontal collisions, adjusting the player's position and velocity accordingly.
+ */
 export function collision(player: IPlayer, platform: ISolidObject) {
   // Vertical collision check (Top of Platform)
   if (

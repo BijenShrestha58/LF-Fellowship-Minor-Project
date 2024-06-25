@@ -3,10 +3,10 @@ import { IPlayer } from "../interfaces/IPlayer";
 import { IPosition } from "../interfaces/IPosition";
 import { CANVAS_DIMENSIONS, STAGGER_FRAMES } from "../utils/constants";
 import Enemy from "./Enemy";
-import { enemyASpritePositions } from "../utils/spriteArrays/enemyAData";
+import { enemyBSpritePositions } from "../utils/spriteArrays/enemyBData";
 import EnemyProjectile from "./EnemyProjectile";
 
-export default class EnemyA extends Enemy {
+export default class EnemyB extends Enemy {
   patrolDistance: number;
   initialX: number;
   patrolDirection: number;
@@ -82,7 +82,7 @@ export default class EnemyA extends Enemy {
     this.projectiles.push(projectile);
   }
 
-  update(player: IPlayer, enemies: EnemyA[], index: number) {
+  update(player: IPlayer, enemies: EnemyB[], index: number) {
     this.y += this.dy;
 
     // Call the parent update method
@@ -91,20 +91,20 @@ export default class EnemyA extends Enemy {
     if (this.gameFrame >= STAGGER_FRAMES) {
       this.gameFrame = 0;
 
-      if (this.frameX >= enemyASpritePositions.length - 1) {
+      if (this.frameX >= enemyBSpritePositions.length - 1) {
         if (this.holdCount < this.frameHold) {
-          this.frameX = enemyASpritePositions.length - 1;
+          this.frameX = enemyBSpritePositions.length - 1;
           this.holdCount++;
         } else {
           this.frameX = 0;
           this.holdCount = 0;
         }
       } else {
-        this.frameX = (this.frameX + 1) % enemyASpritePositions.length;
+        this.frameX = (this.frameX + 1) % enemyBSpritePositions.length;
       }
     }
 
-    let framePos = enemyASpritePositions[this.frameX];
+    let framePos = enemyBSpritePositions[this.frameX];
     this.spriteX = framePos.x;
     this.spriteY = framePos.y;
     this.spriteWidth = framePos.width;

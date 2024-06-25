@@ -5,7 +5,7 @@ export const mapColliderArray: ISolidObject[] = [
   {
     x: 9.160318374633789,
     y: 1491.5389404296875,
-    width: 1163.7587890625,
+    width: 1010,
     height: 62.52913284301758,
   },
   {
@@ -48,7 +48,7 @@ export const mapColliderArray: ISolidObject[] = [
     x: 1014.0075073242188,
     y: 1459.6768798828125,
     width: 158.91162109375,
-    height: 48.98779296875,
+    height: 94,
   },
   {
     x: 1225.0931396484375,
@@ -94,9 +94,9 @@ export const mapColliderArray: ISolidObject[] = [
   },
   {
     x: 3028.87939453125,
-    y: 1793.0328369140625,
+    y: 1492,
     width: 82.04459381103516,
-    height: 96.38248443603516,
+    height: 397,
   },
   {
     x: 3157.92041015625,
@@ -125,7 +125,7 @@ export const mapColliderArray: ISolidObject[] = [
   {
     x: 4294.59619140625,
     y: 659.54296875,
-    width: 78.46012115478516,
+    width: 575,
     height: 308.2646484375,
   },
   {
@@ -200,12 +200,7 @@ export const mapColliderArray: ISolidObject[] = [
     width: 192.36669921875,
     height: 141.78579711914062,
   },
-  {
-    x: 3077.468994140625,
-    y: 1536.9422607421875,
-    width: 33.455078125,
-    height: 260.07342529296875,
-  },
+
   {
     x: 2648.128662109375,
     y: 1972.65478515625,
@@ -238,6 +233,14 @@ export const mapColliderArray: ISolidObject[] = [
   },
 ];
 
+/**
+ * Adjusts the positions of colliders based on a map offset.
+ *
+ * @constant {ISolidObject[]} adjustedColliders - The array of adjusted colliders.
+ *
+ * Maps through the `mapColliderArray`, adjusting each collider's x and y positions
+ * by the `MAP_OFFSET.X` and `MAP_OFFSET.Y` values respectively.
+ */
 export const adjustedColliders: ISolidObject[] = mapColliderArray.map(
   (collider) => ({
     x: collider.x + MAP_OFFSET.X,

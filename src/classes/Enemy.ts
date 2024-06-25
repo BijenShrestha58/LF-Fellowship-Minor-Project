@@ -6,10 +6,15 @@ import { collision, collisionGeneral } from "../utils/collision";
 import { GRAVITY } from "../utils/constants";
 import { adjustedColliders } from "../utils/spriteArrays/mapColliderArray";
 import EnemyA from "./EnemyA";
+import EnemyProjectile from "./EnemyProjectile";
 import Sprite from "./Sprite";
 
 export default class Enemy extends Sprite {
   damage: number;
+  range: number;
+  cooldown: number;
+  cooldownCounter: number;
+  projectiles: EnemyProjectile[];
   constructor(
     image: HTMLImageElement,
     spritePosition: IPosition,
@@ -25,7 +30,10 @@ export default class Enemy extends Sprite {
     isFlipX: boolean,
     hitBox: IDimensions,
     hp: number,
-    damage: number
+    damage: number,
+    range: number,
+    cooldown: number,
+    cooldownCounter: number
   ) {
     super(
       image,
@@ -44,10 +52,15 @@ export default class Enemy extends Sprite {
       hp //hp
     );
     this.damage = damage;
+    this.range = range;
+    this.cooldown = cooldown;
+    this.cooldownCounter = cooldownCounter;
+    this.projectiles = [];
   }
 
   update(player: IPlayer, enemies: EnemyA[], index: number) {
-    // Example movement logic, can be replaced with specific enemy behavior
+    this.cooldownCounter++;
+
     this.dy += GRAVITY;
     this.x += this.dx;
     this.y += this.dy;
@@ -58,7 +71,6 @@ export default class Enemy extends Sprite {
         this.y = collider.y - this.height;
       }
     });
-
     this.projectileHit(player);
     if (this.hp <= 0) this.destroy(enemies, index);
   }
@@ -69,6 +81,16 @@ export default class Enemy extends Sprite {
 
   destroy(enemies: EnemyA[], index: number) {
     enemies.splice(index, 1);
+  }
+
+  shouldShootProjectile(player: IPlayer) {
+    let inRange: boolean = this.isFlipX
+      ? player.x > this.x + this.range
+      : player.x > this.x - this.range;
+    if (this.cooldownCounter > this.cooldown && inRange) {
+      this.cooldownCounter = 0;
+      return true;
+    }
   }
 
   projectileHit(player: IPlayer) {
