@@ -36,8 +36,6 @@ let stageMap: StageMap;
 let enemies: (EnemyA | EnemyB | EnemyC)[]; //array of different enemies
 let dropItems: DropItem[];
 let hpBar: Hp;
-enemies = [];
-dropItems = [];
 
 window.addEventListener("keydown", (e) => {
   switch (e.key) {
@@ -56,6 +54,8 @@ function setUp() {
   player = new Player(XImages);
   stageMap = new StageMap(map);
   hpBar = new Hp();
+  enemies = [];
+  dropItems = [];
   adjustedEnemyASpawn.forEach((enemy) => {
     let enemyA = new EnemyA(enemyAImg, enemy);
     enemies.push(enemyA);
@@ -68,7 +68,6 @@ function setUp() {
     let enemyC = new EnemyC(enemyCImg, enemy);
     enemies.push(enemyC);
   });
-  ctx.scale(1, 1);
   ctx.scale(
     canvas.height / 258.6666666666667,
     canvas.height / 258.6666666666667
@@ -88,8 +87,8 @@ function gameLoop(timestamp: number) {
     ctx.clearRect(
       player.cameraBox.offsetX,
       player.cameraBox.offsetY,
-      BG_DIMENSIONS.WIDTH,
-      BG_DIMENSIONS.HEIGHT
+      canvas.width,
+      canvas.height
     );
     ctx.fillRect(
       player.cameraBox.offsetX,
@@ -97,11 +96,6 @@ function gameLoop(timestamp: number) {
       BG_DIMENSIONS.WIDTH,
       BG_DIMENSIONS.HEIGHT
     );
-
-    if (gameState === GAME_STATE.GAME_OVER) {
-      console.log("game over");
-      return;
-    }
 
     stageMap.update();
     stageMap.draw();
@@ -143,6 +137,7 @@ function showMenu() {
 }
 
 function showGameOverScreen() {
+  ctx.reset();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.font = "30px Arial";
   ctx.fillStyle = "black";

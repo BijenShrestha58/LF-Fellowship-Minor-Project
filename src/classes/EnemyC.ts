@@ -68,8 +68,8 @@ export default class EnemyC extends Enemy {
   shootProjectile(player: IPlayer) {
     const projectile = new EnemyProjectile(
       this.image,
-      193,
-      86,
+      117,
+      167,
       8,
       8,
       this.x,
