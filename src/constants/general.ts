@@ -4,6 +4,8 @@ export const STAGGER_FRAMES = 5;
 
 export const MAX_DY = 5;
 
+export const SCALING_FACTOR = 1 / 258.6666666666667;
+
 export const PLAYER_HIT_BOX = {
   WIDTH: 30,
   HEIGHT: 34,
@@ -22,8 +24,8 @@ export const MAP_OFFSET = {
 export const ASPECT_RATIO = 720 / 776;
 
 export const CANVAS_DIMENSIONS = {
-  WIDTH: (window.innerHeight * ASPECT_RATIO) / 3,
-  HEIGHT: window.innerHeight / 3,
+  WIDTH: window.innerHeight * ASPECT_RATIO * SCALING_FACTOR,
+  HEIGHT: window.innerHeight * SCALING_FACTOR,
 };
 
 export enum GAME_STATE {

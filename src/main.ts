@@ -6,7 +6,12 @@ import Hp from "./classes/Hp";
 import Player from "./classes/Player";
 import StageMap from "./classes/StageMap";
 import "./style.css";
-import { ASPECT_RATIO, BG_DIMENSIONS, GAME_STATE } from "./constants/general";
+import {
+  ASPECT_RATIO,
+  BG_DIMENSIONS,
+  GAME_STATE,
+  SCALING_FACTOR,
+} from "./constants/general";
 import { adjustedEnemyASpawn } from "./constants/enemyAData";
 import { adjustedEnemyBSpawn, isFlip } from "./constants/enemyBData";
 import { adjustedEnemyCSpawn } from "./constants/enemyCData";
@@ -68,10 +73,7 @@ function setUp() {
     let enemyC = new EnemyC(enemyCImg, enemy);
     enemies.push(enemyC);
   });
-  ctx.scale(
-    canvas.height / 258.6666666666667,
-    canvas.height / 258.6666666666667
-  );
+  ctx.scale(canvas.height * SCALING_FACTOR, canvas.height * SCALING_FACTOR);
   requestAnimationFrame(gameLoop);
 }
 
