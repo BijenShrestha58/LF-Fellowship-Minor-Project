@@ -24,8 +24,8 @@ export const MAP_OFFSET = {
 export const ASPECT_RATIO = 720 / 776;
 
 export const CANVAS_DIMENSIONS = {
-  WIDTH: window.innerHeight * ASPECT_RATIO * SCALING_FACTOR,
-  HEIGHT: window.innerHeight * SCALING_FACTOR,
+  WIDTH: window.innerHeight * ASPECT_RATIO / (window.innerHeight * SCALING_FACTOR),
+  HEIGHT: window.innerHeight / (window.innerHeight * SCALING_FACTOR),
 };
 
 export enum GAME_STATE {
